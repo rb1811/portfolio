@@ -10,7 +10,10 @@ def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component
             padding="1em",
             width="100%",
         ),
-        child,
+        rx.box(
+            child,
+            padding="1em",
+            width="100%",
+        ),
         rx.color_mode.button(position="bottom-right"),
-        
     )
