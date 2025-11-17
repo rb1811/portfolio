@@ -1,13 +1,18 @@
 [
     {
         "company": "Microsoft Corporation",
+        "logo": "microsoft_corporation.png",
+        "href": "https://www.microsoft.com/en-in",
         "roles": [
             {
                 "title": "Software Engineer 2",
                 "date_range": "12/2022 - 02/2025",
                 "projects": [
                     {
-                        "description": "Developed and implemented the security and compliance policy for our Copilot LLM, focusing on data governance and protection. Engineered a mechanism for selective filtering of sensitive documents to prevent their use in LLM training and enhance security posture.",
+                        "description": [
+                            "Developed and implemented the security and compliance policy for our Copilot LLM, focusing on data governance and protection.",
+                            "Engineered a mechanism for selective filtering of sensitive documents to prevent their use in LLM training and enhance security posture."
+                        ],
                         "technology_stack": ["C#", "Scala", "Apache Spark 2", "Azure Functions", "Azure blob storage", "Azure Data Factory"],
                         "title": "Copilot LLM Security and Compliance"
                     }
@@ -17,13 +22,18 @@
     },
     {
         "company": "Hewlett Packard Enterprise Company",
+        "logo": "hewlett_packard_enterprise_company.png",
+        "href": "https://www.hpe.com/in/en/home.html",
         "roles": [
             {
                 "title": "Senior Software Engineer",
                 "date_range": "06/2021 - 12/2022",
                 "projects": [
                     {
-                        "description": "Worked on building RBAC for HPE's Greenlake Project. Developed an authorization micro-service for a Cloud Network Management software that authorizes customers based on their roles and permissions.",
+                        "description": [
+                            "Led development on Role Based Access Control (RBAC) for HPE's Greenlake Project.",
+                            "Developed an authorization micro-service for a Cloud Network Management software that authorizes customers based on their roles and permissions."
+                        ],
                         "technology_stack": ["Python3", "FastAPI", "Casbin", "Asyncio", "Pytest"],
                         "title": "Role Based Access Control Microservice"
                     }
@@ -34,14 +44,14 @@
                 "date_range": "06/2019 - 08/2021",
                 "projects": [
                     {
-                        "description": "Delivered Multi Tiered Licensing model for licensing micro-service of Aruba Cloud Project. New model charges customers based on device types, models, number of ports it supports and other variations. Worked on laying down the infrastructure in Swagger for all new UI Rest APIs, ensured backward compatibility of North bound APIs, Auto licensing and delivered other key functionalities.",
-                        "technology_stack": ["Flask", "Swagger", "Pytest", "K8s", "Dockers"],
-                        "title": "Multi Tiered Licensing Model"
-                    },
-                    {
-                        "description": "Have exposure for the CI/CD framework. Helped building the CI framework which enables developers to run Unit Tests/ Feature Tests in their own development K8s clusters, which results in easy debugging, gives faster feedback, supports parallel builds, runs in a containerized environment making it OS agnostic.",
-                        "technology_stack": ["Jenkins", "Python2", "Dockers", "Kubernetes", "Shell Scripting", "Jfrog lib management"],
-                        "title": "CI/CD Framework Contribution"
+                        "description": [
+                            "Delivered a Multi-Tiered Licensing model for the Aruba Cloud Project's licensing micro-service.",
+                            "New model charges customers based on device types, models, number of ports, and other variations.",
+                            "Worked on infrastructure in Swagger for new UI Rest APIs, ensuring backward compatibility of North-bound APIs, and delivered Auto Licensing functionality.",
+                            "Contributed to building the CI framework, enabling developers to run Unit/Feature Tests in private development K8s clusters for faster, containerized feedback."
+                        ],
+                        "technology_stack": ["Flask", "Swagger", "Pytest", "K8s", "Dockers", "Jenkins", "Python2", "Shell Scripting", "Jfrog lib management"],
+                        "title": "Licensing Model and CI/CD Framework Contribution"
                     }
                 ]
             },
@@ -50,7 +60,11 @@
                 "date_range": "06/2018 - 08/2019",
                 "projects": [
                     {
-                        "description": "Worked on 2 major Airwave's feature (an on-premise Network Management Software solution) Wan monitoring and Zero Touch Provisioning. Both features aimed at monitoring and managing network devices like Access Points, switches and controllers. Developed all of the Rest APIs single handed in a Unit Test Driven development.",
+                        "description": [
+                            "Developed two major features for Airwave (on-premise Network Management Software): **WAN monitoring** and **Zero Touch Provisioning**.",
+                            "Features focused on monitoring and managing network devices (Access Points, switches, and controllers).",
+                            "Developed all Rest APIs single-handedly using a Unit Test Driven development approach."
+                        ],
                         "technology_stack": ["Perl", "Shell Scripting"],
                         "title": "Airwave Feature Development"
                     }
@@ -61,7 +75,12 @@
                 "date_range": "06/2017 - 08/2017",
                 "projects": [
                     {
-                        "description": "Designed software to configure, upgrade and monitor the usage of the network in real-time. Have worked on the VisualRF backend and frontend features of the Airwave technology. Wrote shell scripts to improve the existing build process to deploy the code into Kubernetes. Won the third prize in Best in Class Presentation of Aruba Intern Project Fair 2017.",
+                        "description": [
+                            "Designed software to configure, upgrade, and monitor network usage in real-time.",
+                            "Contributed to both the VisualRF backend and frontend features of the Airwave technology.",
+                            "Wrote shell scripts to improve the existing build process for code deployment into Kubernetes.",
+                            "Won third prize in the 'Best in Class Presentation' at the Aruba Intern Project Fair 2017."
+                        ],
                         "technology_stack": ["Backend", "Frontend", "Shell Scripts", "Kubernetes"],
                         "title": "Network Real-time Monitoring Tool"
                     }
@@ -71,13 +90,17 @@
     },
     {
         "company": "INDO-GERMAN INSTITUTE OF ADVANCED TECHNOLOGY",
+        "logo": "igiat.png",
+        "href": "https://www.igiat.com/",
         "roles": [
             {
                 "title": "Software Developer Intern",
                 "date_range": "12/2014 - 01/2015",
                 "projects": [
                     {
-                        "description": "Developed and deployed a website for handling the the accounts of IGIAT.",
+                        "description": [
+                            "Developed and deployed a website for handling the accounts of IGIAT."
+                        ],
                         "technology_stack": ["Website Development", "Java"],
                         "title": "Accounts Management Website"
                     }
