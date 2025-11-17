@@ -1,6 +1,6 @@
 import reflex as rx
-from .navbar import navbar_icons
-from .about_page import about_me
+from ..navbar import navbar_icons
+from .default_content import about_me
 
 def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component:
     

@@ -1,8 +1,9 @@
 import reflex as rx
 
-def skills(*args, **kwargs) -> rx.Component:
+def about_me(*args, **kwargs) -> rx.Component:
+    """The default content for the home/about page."""
     return rx.vstack(
-        rx.heading("My skillsets", size="9"),
+        rx.heading("A bit about me", size="9"),
         rx.text(
             "Coming soon",
             size="5",

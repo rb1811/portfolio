@@ -1,8 +1,15 @@
 import reflex as rx
 
-def education(*args, **kwargs) -> rx.Component:
+from .base_page import base_page
+
+
+def projects_page() -> rx.Component: 
+    return base_page(projects()) 
+
+
+def projects(*args, **kwargs) -> rx.Component:
     return rx.vstack(
-        rx.heading("My education", size="9"),
+        rx.heading("My projects", size="9"),
         rx.text(
             "Coming soon",
             size="5",

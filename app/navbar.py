@@ -48,7 +48,7 @@ def navbar_icons() -> rx.Component:
                 rx.hstack(
                     navbar_icons_item("Work", "briefcase-business", "/work"),
                     navbar_icons_item("Education", "school", "/education"),
-                    navbar_icons_item("Skill", "chart-bar", "/skills"),
+                    navbar_icons_item("Skills", "chart-bar", "/skills"),
                     navbar_icons_item("Projects", "folder-git-2", "/projects"),
                     navbar_icons_item("Contact-Me", "contact-round", "/contact"),
                     spacing="7", 
@@ -87,7 +87,7 @@ def navbar_icons() -> rx.Component:
                     rx.menu.content(
                         navbar_icons_menu_item("Work", "briefcase-business", "/work"),
                         navbar_icons_menu_item("Education", "school", "/education"),
-                        navbar_icons_menu_item("Skill", "chart-bar", "/skills"),
+                        navbar_icons_menu_item("Skills", "chart-bar", "/skills"),
                         navbar_icons_menu_item("Projects", "folder-git-2", "/projects"),
                         navbar_icons_menu_item("Contact-Me", "contact-round", "/contact"),
                     ),

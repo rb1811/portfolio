@@ -1,8 +1,12 @@
 import reflex as rx
+from .base_page import base_page
 
-def work(*args, **kwargs) -> rx.Component:
+def skills_page() -> rx.Component: 
+    return base_page(skills()) 
+
+def skills(*args, **kwargs) -> rx.Component:
     return rx.vstack(
-        rx.heading("My work experience", size="9"),
+        rx.heading("My skillsets", size="9"),
         rx.text(
             "Coming soon",
             size="5",

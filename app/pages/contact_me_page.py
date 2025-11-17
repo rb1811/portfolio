@@ -1,8 +1,13 @@
 import reflex as rx
+from .base_page import base_page
 
-def about_me(*args, **kwargs) -> rx.Component:
+ 
+def contact_me_page() -> rx.Component: 
+    return base_page(contact_me()) 
+
+def contact_me(*args, **kwargs) -> rx.Component:
     return rx.vstack(
-        rx.heading("A bit about me", size="9"),
+        rx.heading("My contact details", size="9"),
         rx.text(
             "Coming soon",
             size="5",
