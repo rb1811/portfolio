@@ -22,3 +22,14 @@ __pycache__/
 
 # Reflex/Web Project Specific
 .web/
+
+# Python history
+.python_history
+
+# GnuPG (HIGHLY SENSITIVE - DO NOT COMMIT!)
+.gnupg/
+
+# .NET artifacts
+.dotnet/
+
+.bash_history
