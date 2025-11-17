@@ -1,15 +1,16 @@
 import reflex as rx
 from .navbar import navbar_icons
-# from .navbar import navbar_buttons
+from .about_page import about_me
 
-def base_page(*args, **kwargs) -> rx.Component:
+def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component:
+    
     return rx.fragment(
         rx.box(
-            # navbar_buttons(),
             navbar_icons(),
             padding="1em",
             width="100%",
         ),
+        child,
         rx.color_mode.button(position="bottom-right"),
         
     )
