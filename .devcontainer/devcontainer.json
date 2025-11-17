@@ -1,0 +1,42 @@
+{
+    "name": "Reflex Docker Development",
+    
+    // 1. Tell VS Code to use the existing docker-compose setup
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    
+    // 2. Specify which service to attach to (your Reflex server)
+    "service": "frontend",
+    
+    // 3. Set the directory where your code lives inside the container
+    "workspaceFolder": "/app",
+    
+    "containerEnv": {
+        "SHELL": "/bin/bash" // Forces the container shell to use bash
+    },
+    
+    // 4. Recommended extensions to install automatically inside the container
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "files.exclude": {
+                    "**/__pycache__": true
+                }
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.debugpy",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+    
+    // 5. Port forwarding for browser preview
+    "forwardPorts": [3000, 8000],
+    
+    // 6. Command to run after attaching to the container
+    "postAttachCommand": "reflex run"
+}
