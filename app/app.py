@@ -3,38 +3,47 @@
 import reflex as rx
 
 from rxconfig import config
+from .work import work
 from .base_page import base_page
-
+from .about_page import about_me
+from .projects import projects
+from .education import education
+from .skills import skills
+from .work import work
+from .contact_me import contact_me
 
 class State(rx.State):
     pass
 
 
-
-
 def index() -> rx.Component:  
     return base_page()  
-    # return rx.container(
-    #     rx.vstack(
-    #         rx.color_mode.button(position="bottom-right"),
-    #         rx.heading("Welcome to Reflex!", size="9"),
-    #         rx.text(
-    #             "Get started by editing ",
-    #             rx.code(f"{config.app_name}/{config.app_name}.py"),
-    #             size="5",
-    #         ),
-    #         rx.button("Pick Prabhat"),
-    #         rx.link(
-    #             rx.button("Check out our docs!"),
-    #             href="https://reflex.dev/docs/getting-started/introduction/",
-    #             is_external=True,
-    #         ),
-    #         spacing="5",
-    #         justify="center",
-    #         min_height="85vh",
-    #     ),
-    # )
+
+def about_page() -> rx.Component: 
+     return base_page(about_me()) 
+
+def work_page() -> rx.Component: 
+     return base_page(work()) 
+ 
+def contact_me_page() -> rx.Component: 
+    return base_page(contact_me()) 
+
+def skills_page() -> rx.Component: 
+    return base_page(skills()) 
+
+def projects_page() -> rx.Component: 
+    return base_page(projects()) 
+ 
+def education_page() -> rx.Component: 
+    return base_page(education()) 
 
 
 app = rx.App()
 app.add_page(index)
+app.add_page(about_page, route="/about")
+app.add_page(work_page, route="/work")
+app.add_page(contact_me_page, route="/contact")
+app.add_page(skills_page, route="/skills")
+app.add_page(projects_page, route="/projects")
+app.add_page(education_page, route="/education")
+

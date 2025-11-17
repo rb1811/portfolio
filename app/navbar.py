@@ -28,26 +28,29 @@ def navbar_icons() -> rx.Component:
     return rx.box(
         rx.desktop_only(
             rx.hstack(
-                # 1. Name and Logo Group (STAYS LEFT)
-                rx.hstack(
-                    rx.heading(
-                        "Prabhat Racherla", 
-                        size="7", 
-                        weight="bold",
-                        white_space="nowrap",
+                
+                rx.link(
+                    rx.hstack(
+                        rx.heading(
+                            "Prabhat Racherla", 
+                            size="7", 
+                            weight="bold",
+                            white_space="nowrap",
+                        ),
+                        align_items="center",
                     ),
-                    align_items="center",
+                    href="/about"
                 ),
                 
                 # 2. Navigation Links Group (Centered in the available space)
                 # CRITICAL CHANGE: This rx.hstack now uses the majority of the space
                 # and centers its children.
                 rx.hstack(
-                    navbar_icons_item("Work", "briefcase-business", "/#"),
-                    navbar_icons_item("Education", "school", "/#"),
-                    navbar_icons_item("Skill", "chart-bar", "/#"),
-                    navbar_icons_item("Projects", "folder-git-2", "/#"),
-                    navbar_icons_item("Contact-Me", "contact-round", "/#"),
+                    navbar_icons_item("Work", "briefcase-business", "/work"),
+                    navbar_icons_item("Education", "school", "/education"),
+                    navbar_icons_item("Skill", "chart-bar", "/skills"),
+                    navbar_icons_item("Projects", "folder-git-2", "/projects"),
+                    navbar_icons_item("Contact-Me", "contact-round", "/contact"),
                     spacing="7", 
                     # KEY FIX: Force this hstack to take up maximum space (flex-grow)
                     flex_grow=1, 
@@ -72,18 +75,21 @@ def navbar_icons() -> rx.Component:
         rx.mobile_and_tablet(
             # ... (Mobile code remains the same)
             rx.hstack(
-                rx.hstack(
-                    rx.heading("Prabhat Racherla", size="6", weight="bold"),
-                    align_items="center",
+                rx.link(
+                    rx.hstack(
+                        rx.heading("Prabhat Racherla", size="6", weight="bold"),
+                        align_items="center",
+                    ),
+                    href="/about"
                 ),
                 rx.menu.root(
                     rx.menu.trigger(rx.icon("menu", size=30)),
                     rx.menu.content(
-                        navbar_icons_menu_item("Work", "briefcase-business", "/#"),
-                        navbar_icons_menu_item("Education", "school", "/#"),
-                        navbar_icons_menu_item("Skill", "chart-bar", "/#"),
-                        navbar_icons_menu_item("Projects", "folder-git-2", "/#"),
-                        navbar_icons_menu_item("Contact-Me", "contact-round", "/#"),
+                        navbar_icons_menu_item("Work", "briefcase-business", "/work"),
+                        navbar_icons_menu_item("Education", "school", "/education"),
+                        navbar_icons_menu_item("Skill", "chart-bar", "/skills"),
+                        navbar_icons_menu_item("Projects", "folder-git-2", "/projects"),
+                        navbar_icons_menu_item("Contact-Me", "contact-round", "/contact"),
                     ),
                     justify="end",
                 ),
