@@ -1,0 +1,24 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Caches and Temporary Files
+.cache/
+.config/
+.local/
+.states/
+.bun/
+
+# Python Artifacts
+__pycache__/
+*.pyc
+
+# VS Code Remote
+.vscode-server/
+
+# Other Version Control System Directories
+.svn/
+.hg/
+
+# Reflex/Web Project Specific
+.web/

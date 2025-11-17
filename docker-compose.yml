@@ -1,0 +1,21 @@
+# /Documents/portfolio/docker-compose.yml
+version: '3.8'
+services:
+  frontend:
+    # Tells Docker Compose to build using the local Dockerfile
+    build: . 
+    container_name: portfolio-project 
+    # Maps the required ports from the host (left) to the container (right)
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    # Maps your local project folder to the container's working directory
+    # The . on the left refers to your /Documents/portfolio directory
+    volumes:
+      - .:/app 
+    # Set the container process to run as your host user ID
+    user: "1000:1000"
+    # The command to run when the container starts
+    command: reflex run
+    # Detached mode to run in the background
+    tty: true
