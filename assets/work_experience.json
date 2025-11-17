@@ -2,7 +2,8 @@
     {
         "company": "Microsoft Corporation",
         "logo": "microsoft_corporation.png",
-        "href": "https://www.microsoft.com/en-in",
+        "href": "#",
+        "color": "orange",
         "roles": [
             {
                 "title": "Software Engineer 2",
@@ -21,9 +22,10 @@
         ]
     },
     {
-        "company": "Hewlett Packard Enterprise Company",
+        "company": "Hewlett Packard Enterprise",
         "logo": "hewlett_packard_enterprise_company.png",
-        "href": "https://www.hpe.com/in/en/home.html",
+        "color": "grass",
+        "href": "#",
         "roles": [
             {
                 "title": "Senior Software Engineer",
@@ -91,7 +93,9 @@
     {
         "company": "INDO-GERMAN INSTITUTE OF ADVANCED TECHNOLOGY",
         "logo": "igiat.png",
-        "href": "https://www.igiat.com/",
+        "color": "red",
+        "href": "#",
+        "display_name": "IGIAT",
         "roles": [
             {
                 "title": "Software Developer Intern",

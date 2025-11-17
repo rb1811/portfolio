@@ -5,14 +5,6 @@ import os
 
 from .base_page import base_page
 
-# --- COLOR MAPPING FOR COMPANIES ---
-# Using standard Radix color names for light, professional variation.
-COMPANY_COLOR_MAP = {
-    "Microsoft Corporation": "orange",
-    "Hewlett Packard Enterprise Company": "grass",
-    "INDO-GERMAN INSTITUTE OF ADVANCED TECHNOLOGY": "blue",
-}
-
 # --- DATA LOADING FUNCTION (Simplified file-reading logic) ---
 
 def load_work_data():
@@ -29,7 +21,7 @@ def load_work_data():
             loaded_data = json.load(f)
             return loaded_data
     except FileNotFoundError:
-        # Handle the case where the file is missing at the confirmed path.
+        # Handle the case where the file is missing at the expected path.
         print(f"Error: work_experience.json not found at the expected path: {file_path}. Returning empty list.")
         return []
     except json.JSONDecodeError:
@@ -139,10 +131,15 @@ def role_section(role: dict) -> rx.Component:
 
 def company_section(company_data: dict) -> rx.Component:
     """Renders the Company name and logo, followed by all roles. This is Level 1."""
-    company_name = company_data["company"]
+    
+    full_company_name = company_data["company"]
+    # Use display_name for the visible heading if available, otherwise use the full name
+    display_name_to_use = company_data.get("display_name", full_company_name)
+    
     logo_filename = company_data.get("logo") 
     company_href = company_data.get("href", "#") 
-    color_scheme = COMPANY_COLOR_MAP.get(company_name, "blue")
+    # Read color directly from JSON data
+    color_scheme = company_data.get("color", "blue")
     
     # Image path uses the root-relative path (leading slash) as confirmed.
     full_logo_path = f"/{logo_filename}" if logo_filename else None
@@ -153,7 +150,7 @@ def company_section(company_data: dict) -> rx.Component:
         rx.link( # The logo is now wrapped in an rx.link
             rx.image(
                 src=full_logo_path, # Uses the corrected path format: /filename.png
-                alt=f"{company_name} logo",
+                alt=f"{full_company_name} logo", # Use full name for alt text
                 width="40px",
                 height="40px",
                 object_fit="contain",
@@ -169,7 +166,7 @@ def company_section(company_data: dict) -> rx.Component:
     # Define the linked heading component
     linked_heading = rx.link(
         rx.heading(
-            company_name, 
+            display_name_to_use, # <-- Using the preferred display name here
             size="8", 
             weight="bold",
             color_scheme=color_scheme, 
