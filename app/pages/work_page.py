@@ -112,7 +112,8 @@ def role_section(role: dict) -> rx.Component:
                     role["date_range"], 
                     size="4", 
                     weight="medium",
-                    color="gray"
+                    color="gray",
+                    margin_right="10px"
                 ),
                 width="100%",
                 margin_bottom="2", # Space between role title/date and first project
@@ -199,18 +200,27 @@ def company_section(company_data: dict) -> rx.Component:
         # Card settings
         width="100%", 
         margin_y="4",
+        
+        # ADDED HOVER LOGIC FOR CONSISTENCY
+        transition="all 0.2s ease-in-out",
+        _hover={
+            "box_shadow": rx.color_mode_cond("xl", "xl"),
+            "transform": "translateY(-2px)",
+            "border": f"1px solid var(--link{color_scheme}-6)" 
+        }
+        # END HOVER LOGIC
     )
 
 # The main component that stitches everything together
 def work(*args, **kwargs) -> rx.Component:
-    return rx.box(
+    return rx.center(
         rx.vstack(
             # CRITICAL: Loop through the loaded data
             *[company_section(data) for data in WORK_EXPERIENCE_DATA],
             
             spacing="5",
             align="center",
-            width="100%", 
+            width="90%", 
             min_height="85vh",
         ),
         max_width="100%", 

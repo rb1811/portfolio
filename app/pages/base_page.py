@@ -25,7 +25,7 @@ def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component
             position="fixed",
             bottom="20px", # Increased margin from the bottom
             right="20px",  # Increased margin from the right
-            z_index="100",  
+            z_index="100",
         )
         
     )

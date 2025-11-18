@@ -2,7 +2,7 @@
     {
         "company": "Microsoft Corporation",
         "logo": "microsoft_corporation.png",
-        "href": "#",
+        "href": "https://www.microsoft.com/",
         "color": "orange",
         "roles": [
             {
@@ -25,7 +25,7 @@
         "company": "Hewlett Packard Enterprise",
         "logo": "hewlett_packard_enterprise_company.png",
         "color": "grass",
-        "href": "#",
+        "href": "https://www.hpe.com/",
         "roles": [
             {
                 "title": "Senior Software Engineer",
@@ -94,7 +94,7 @@
         "company": "INDO-GERMAN INSTITUTE OF ADVANCED TECHNOLOGY",
         "logo": "igiat.png",
         "color": "red",
-        "href": "#",
+        "href": "https://www.igiat.com/",
         "display_name": "IGIAT",
         "roles": [
             {
