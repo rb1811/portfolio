@@ -1,15 +1,13 @@
 import reflex as rx
 import json
 import os
+import typing
 
 from .base_page import base_page
 
-# --- DATA LOADING FUNCTION ---
+# --- DATA LOADING ---
 
 def load_education_data():
-    """Reads the education data from the JSON file."""
-    # NOTE: The logo image files must be present in the assets directory 
-    # (e.g., assets/arizona_state_university.png)
     file_path = os.path.join("assets", "education_data.json")
     
     try:
@@ -19,55 +17,38 @@ def load_education_data():
         print(f"Error loading education data: {e}")
         return []
 
-# Load the data once
 EDUCATION_DATA = load_education_data()
 
 # --- HELPER COMPONENTS ---
 
-def education_card(edu: dict) -> rx.Component:
-    """
-    Creates an education card that is a structural replica of the work card style,
-    and displays the GPA in a badge format.
-    """
+def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     
     logo_filename = edu.get('logo')
-    full_logo_path = f"/{logo_filename}" if logo_filename else None
-    
     card_href = edu.get("href", "#") 
-    
-    # --- GPA and Location Parsing (FIXED) ---
-    # Data source structure: location is in 'location', GPA is in 'details' (e.g., "GPA: 3.73/4.0")
-    
     location = edu.get('location', '')
-    gpa_detail_string = edu.get('details', '')
+    gpa_detail_string = edu.get('details', '') 
 
-    # 1. Parse the GPA detail string to separate the label (GPA:) from the score (X.XX/Y.Y)
-    gpa_detail_parts = gpa_detail_string.split(':', 1)
+    # String Concatenation Fix: Reflex handles the concatenation of a string and a Var.
+    full_logo_path = rx.cond(
+        logo_filename, 
+        "/" + logo_filename, 
+        "",                           
+    )
     
-    # Determine the display label (e.g., "GPA:") and the score (e.g., "3.73/4.0")
-    if len(gpa_detail_parts) > 1:
-        # e.g., parts[0]="GPA", parts[1]=" 3.73/4.0"
-        gpa_label = gpa_detail_parts[0].strip() + ":"
-        gpa_score = gpa_detail_parts[1].strip()
-    else:
-        # Fallback if 'details' is not in the expected format
-        gpa_label = "GPA : "
-        gpa_score = gpa_detail_string.strip() # May just be the score or the full string
-
-    # 2. Define the GPA badge component
+    # GPA badge component
     gpa_badge = rx.badge(
-        gpa_score,
+        gpa_detail_string,
         variant="soft", 
         color_scheme="indigo", 
         size="3",
-        margin_left="1", # Small margin to separate it from the 'GPA:' label
+        margin_left="1", 
         margin_y="0",
     )
     
-    # 3. Create the Location and GPA text component
+    # Location and GPA text component
     location_and_gpa = rx.hstack(
         rx.text(
-            f"{location} | {gpa_label}", # Combines location, separator, and the 'GPA:' label
+            location, 
             size="4",
             weight="medium",
             color=rx.color_mode_cond("gray.500", "gray.400"),
@@ -75,15 +56,14 @@ def education_card(edu: dict) -> rx.Component:
             margin_left="4",
             white_space="nowrap",
         ),
-        gpa_badge, # The new GPA badge with the score
-        spacing="0",
+        gpa_badge, 
+        spacing="2", 
         align_items="center"
     )
-    # --- End GPA and Location Parsing ---
 
-    # 1. Define the linked logo component
+    # Linked logo component
     linked_logo = rx.cond(
-        full_logo_path,
+        full_logo_path != "",
         rx.link(
             rx.image(
                 src=full_logo_path,
@@ -101,7 +81,7 @@ def education_card(edu: dict) -> rx.Component:
         rx.box(width="48px", height="48px", border_radius="8px", background="gray.700")
     )
     
-    # 2. Main Title and Logo Section (HStack)
+    # Main Title and Logo Section (HStack)
     title_section = rx.hstack(
         linked_logo,
         
@@ -125,10 +105,9 @@ def education_card(edu: dict) -> rx.Component:
         padding_x="6"
     )
 
-    # 3. Details and Date Section (HStack)
+    # Details and Date Section (HStack)
     details_and_date = rx.hstack(
         rx.vstack(
-            # Degree Name (e.g., Masters in Computer Science)
             rx.text(
                 edu["institution"],
                 size="5",
@@ -136,8 +115,6 @@ def education_card(edu: dict) -> rx.Component:
                 color=rx.color_mode_cond("gray.900", "gray.100"), 
                 margin_left="4",
             ),
-            
-            # Location and GPA details (Now using the new component)
             location_and_gpa,
             
             align_items="flex-start",
@@ -160,7 +137,7 @@ def education_card(edu: dict) -> rx.Component:
         padding_x="6"
     )
     
-    # 4. Description (List of accomplishments, simplified for education)
+    # Description list (maintained structure)
     description_list = rx.vstack(
         spacing="1",
         align_items="flex-start",
@@ -169,7 +146,7 @@ def education_card(edu: dict) -> rx.Component:
         padding_x="6"
     )
 
-    # 5. The final education card structure (VStack)
+    # The final education card structure (VStack)
     return rx.vstack(
         title_section,
         details_and_date,
@@ -181,11 +158,10 @@ def education_card(edu: dict) -> rx.Component:
         border_radius="xl",
         padding="0",
         
-        # --- RESPONSIVE STYLING FOR LIGHT/DARK MODE ---
+        # Responsive styling
         background=rx.color_mode_cond("white", "rgba(255, 255, 255, 0.05)"),
         box_shadow=rx.color_mode_cond("lg", "lg"),
         border=rx.color_mode_cond("1px solid var(--gray-4)", "1px solid rgba(255, 255, 255, 0.1)"),
-        # --- END RESPONSIVE STYLING ---
         
         transition="all 0.2s ease-in-out",
         _hover={
@@ -198,20 +174,32 @@ def education_card(edu: dict) -> rx.Component:
 # --- MAIN PAGE COMPONENT ---
 
 def education(*args, **kwargs) -> rx.Component:
-    """The main education component, structured like the Work Experience page."""
+    """
+    Displays education cards in a responsive two-column grid layout, centered
+    on larger screens and stacked on mobile.
+    """
     
-    return rx.center( 
-        rx.vstack(
-            # List of education cards
-            *[education_card(edu) for edu in EDUCATION_DATA],
-            spacing="6",
-            align="center",
+    return rx.center(
+        rx.grid(
+            rx.foreach(
+                EDUCATION_DATA,
+                lambda edu: rx.card(
+                    education_card(edu),
+                    height="100%", 
+                    width="100%",
+                    padding="0" 
+                ),
+            ),
+            # FIX: Changed list of strings to a dictionary for responsive props
+            # 'base' and 'md' breakpoints get 1 column, 'lg' breakpoint gets 2 columns.
+            columns={"base": "1", "md": "1", "lg": "2"}, 
+            spacing="5",
             width="90%",
-            max_width="7xl"
+            # max_width="6xl", 
+            align_items="stretch" 
         ),
         width="100%",
-        padding_y="12",
-        padding_x="6"
+        margin_left="20px"
     )
 
 

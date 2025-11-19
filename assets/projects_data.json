@@ -1,0 +1,84 @@
+[
+  {
+    "title": "Personal Portfolio",
+    "teamsize": 1,
+    "short_description": "A fully functional, static web portfolio developed end-to-end using only **Python** and the **Reflex** framework.",
+    "full_description": "Developed a personal portfolio site to leverage a **backend-only skillset**. Utilized the open-source **Reflex** framework to achieve **full-stack development (E2E)** entirely in Python, eliminating the need for traditional HTML/CSS/JavaScript. This project successfully demonstrated rapid prototyping and efficient UI development, significantly simplifying front-end complexity.",
+    "languages_used": ["Python", "Docker", "Reflex"],
+    "href": "https://github.com/rb1811/portfolio"
+  },
+  {
+    "title": "American Sign Language Recognition",
+    "teamsize": 1,
+    "short_description": "A machine learning project for **American Sign Language (ASL)** translation, converting gestures to text.",
+    "full_description": "High-impact research project at ASU focused on developing a **User-Dependent and User-Independent ASL recognition system**. The workflow involved **data collection via sensors**, processing, gesture annotation, **feature extraction** (using **FFT** and **DWT**), and **feature selection** (using **PCA**). Machine learning models, including **Decision Trees, SVM, and Keras-based Feed Forward Neural Networks**, were trained to accurately classify 10 core ASL words. This work contributed to bridging the communication gap for the deaf community and was developed as ongoing research in 2018.",
+    "languages_used": ["Matlab", "Python", "Data Mining"],
+    "href": "https://github.com/rb1811/American-Sign-Language"
+  },
+  {
+    "title": "Pacman AI Agent Implementation",
+    "teamsize": 1,
+    "short_description": "AI implementation project based on the University of Berkeley's **Pacman** environment, focused on foundational search algorithms.",
+    "full_description": "Implemented fundamental Artificial Intelligence algorithms within the **University of Berkeley's open-source Pacman environment**. The core task was to integrate and train agents using search strategies such as **Breadth-First Search (BFS)**, **Depth-First Search (DFS)**, and **Reinforcement Learning** to master the game. This project served as a practical application of core AI concepts.",
+    "languages_used": ["Python"],
+    "href": "https://github.com/rb1811/Pacman"
+  },
+  {
+    "title": "Network Planning Management Tool (NPMT)",
+    "teamsize": 3,
+    "short_description": "Code implementation of a network optimization research paper, focused on identifying critical network nodes for maximum disruption.",
+    "full_description": "Developed a functional tool based on an ASU professor's research paper on **Network Planning Management**. The objective was to model a large-scale graph network (e.g., commercial flight routes) and implement the paper's algorithm to determine the **minimum set of critical nodes** required to disrupt the entire network. This demonstrated the ability to translate complex theoretical algorithms into executable code in **Python**.",
+    "languages_used": ["Python"],
+    "href": "https://github.com/rb1811/NPMT"
+  },
+  {
+    "title": "GitHub Trending Visualizer",
+    "teamsize": 1,
+    "short_description": "A web-based tool for **data visualization** of daily **trending open-source projects** on GitHub.",
+    "full_description": "Engineered a full-stack data pipeline to **crawl** and **visualize** daily trending GitHub projects. Developed **Python crawlers** (using **Scrapy** and **BeautifulSoup**) to extract key metrics (forks, languages, companies). The collected data was served via a **Flask** backend and rendered on the frontend using the **D3.js** JavaScript library, providing a dynamic, web-based visualization.",
+    "languages_used": ["Python", "Flask", "Scrapy", "D3.JS", "JavaScript", "beautifulsoup"],
+    "href": "https://github.com/rb1811/githubtrending"
+  },
+  {
+    "title": "Social Media Web Crawlers",
+    "teamsize": 1,
+    "short_description": "Developed **web crawlers (bots)** to extract research data from various social media and review platforms for an ASU Data Mining lab.",
+    "full_description": "Hired as a part-time developer for a **Data Mining research lab** during my Master's program. The primary responsibility was to design and deploy specialized **Python web crawlers** (using **Scrapy** and **BeautifulSoup**) to reliably extract data from major social media and review platforms (e.g., Goodreads, UberEats, Zomato) for subsequent academic analysis.",
+    "languages_used": ["Python", "Scrapy", "beautifulsoup"],
+    "href": "https://github.com/rb1811/Social-Media-web-crawlers"
+  },
+  {
+    "title": "Attacks on RSA Algorithm",
+    "teamsize": 2,
+    "short_description": "Implementation of several well-known and theoretical attacks to demonstrate vulnerabilities in the **RSA Cryptography Algorithm**.",
+    "full_description": "Implemented multiple famous attacks against the **RSA encryption algorithm** from scratch in **C++**. This project served to understand the security foundations of the algorithm and demonstrate how various mathematical weaknesses could be exploited to compromise the system.",
+    "languages_used": ["C++"],
+    "href": "https://github.com/rb1811/RSA-and-its-attacks"
+  },
+  {
+    "title": "2D Map Generation Robot (Mapgen Bot)",
+    "teamsize": 2,
+    "image": "final_year_project.jpg",
+    "short_description": "Developed a **Raspberry Pi-controlled robot** utilizing sonar sensors to autonomously generate a **2D floor map**.",
+    "full_description": "Designed and built a **four-wheeled miniature robot prototype** controlled by a **Raspberry Pi** chip. Motion was managed remotely via a laptop interface. The robot was integrated with **sonar sensors** to gather distance data, which was processed in real-time in **Python** to construct a **2D occupancy map** of the environment. The project's goal was mapping in hazardous or inaccessible environments.",
+    "languages_used": ["Python"],
+    "href": "https://github.com/rb1811/2D_Mapgen_Bot"
+  },
+  {
+    "title": "Indian Missing Person Web Platform",
+    "teamsize": 2,
+    "short_description": "Undergraduate Capstone Project: A web-based platform for reporting, tracking, and managing records of missing persons in India.",
+    "full_description": "Final Year Undergraduate Capstone Project that earned the 'Best Project Award.' Developed a comprehensive **web platform** to facilitate the reporting, management, and **tracking of missing persons** across India. The system utilized **Python** for backend logic and **Neo4J** for relationship-based data storage, with **PHP** potentially handling early web presentation components.",
+    "languages_used": ["Python", "Neo4J", "Php"],
+    "href": "https://github.com/rb1811/Indian-Missing-Person"
+  },
+  {
+    "title": "Benes Network Visualization and Analysis",
+    "teamsize": 3,
+    "short_description": "A **Python-based visualization** and computation tool demonstrating the efficiency of calculating indices on a **Benes Network**.",
+    "full_description": "Developed a **Python/Pygame** application to accompany a published research paper, which focused on network topology. The program **calculates the Transmission Index and Wiener Index** on a **Benes Network**, demonstrating a novel method that reduces the time complexity to linear or constant time. The code includes the logic to **generate a diamond-shaped Benes Network** of N dimensions.",
+    "extra_href": "https://www.researchgate.net/publication/389045573_Transmission_in_Benes_Network",
+    "languages_used": ["Python","Pygame"],
+    "href": "https://github.com/rb1811/benes-graphics"
+  }
+]

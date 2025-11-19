@@ -8,18 +8,17 @@ def projects_page() -> rx.Component:
 
 
 def projects(*args, **kwargs) -> rx.Component:
-    return rx.vstack(
-        rx.heading("My projects", size="9"),
-        rx.text(
-            "Coming soon",
-            size="5",
-            align="center",
-            text_align="center",
-            justify="center",
+    return (
+        rx.center(
+            rx.grid(
+                rx.foreach(
+                    rx.Var.range(2),
+                    lambda i: rx.card(f"Card {i + 1}", height="70vh"),
+                ),
+            columns="2",
+            spacing="4",
+            width="90%",
         ),
-        spacing="5",
-        align="center",
-        text_align="center",
-        justify="center",
-        min_height="85vh",
+        margin_left="10px"  
+        )
     )
