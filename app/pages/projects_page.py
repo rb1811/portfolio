@@ -101,18 +101,21 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
             # --- Fixed padding placement ---
             rx.dialog.title(project.title, size="5"),
             
-            # Divider after title
-            rx.divider(margin_y="5"),
+            # Divider after title - Increased margin_y for more space below title
+            rx.divider(margin_y="8"),
             
             # Consolidated content section for uniform padding/spacing
             rx.vstack(
                 # Full Description
                 rx.dialog.description(
                     project.full_description,
-                    margin_bottom="10", 
+                    margin_bottom="10px",
+                    # Increased margin_top for space between divider and description
+                    margin_top="20px",
                     color=rx.color_mode_cond("gray.700", "gray.300"),
                     text_align="left",
-                    padding_x=dialog_padding_x
+                    padding_x=dialog_padding_x,
+                    size="3", # Increased font size for better readability
                 ), 
                 
                 # Source Code Link Section
@@ -128,10 +131,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                         on_click=rx.stop_propagation
                     ),
                     align_items="center",
-                    # margin_y="3",
                     padding_x=dialog_padding_x,
                     margin_bottom="10px",
-                    # margin_top="10px"
                 ),
                 
                 # Research Paper Link Section
@@ -150,14 +151,13 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                         ),
                         align_items="center",
                         margin_y="3",
-                        margin_bottom="20px"
-                        # padding_x removed, handled by parent
+                        # Increased margin_bottom for space before the footer divider
+                        margin_bottom="30px" 
                     )
                 ),
                 
                 align_items="flex-start",
                 width="100%",
-                # *** CHANGED: Added padding_y for vertical space and kept padding_x ***
                 padding_y="5",
                 padding_x=dialog_padding_x,
             ),
@@ -172,14 +172,15 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 ),
                 justify="start", 
                 width="100%",
-                margin_top="4",
+                # Increased margin_top for space after the divider
+                margin_top="20px",
                 padding_x=dialog_padding_x, 
             ),
             
             # Keyword argument placement
             padding="24px", 
         ),
-        # *** CHANGED: Increased max_width to make dialog bigger ***
+        # Increased max_width to make dialog bigger 
         max_width="800px" 
     )
 
@@ -216,7 +217,7 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         # Check if the list length is > 0
         project.tech_stack.length() > 0,
         rx.vstack(
-            rx.text("Tech Stack:", size="2", weight="bold", color="gray.400", margin_bottom="1"),
+            rx.text("Tech Stack:", size="2", weight="bold", color=rx.color_mode_cond("gray.600", "gray.400"), margin_bottom="1"),
             rx.hstack(
                 rx.foreach(
                     project.tech_stack, 
@@ -244,7 +245,8 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         project.title,
         size="6",
         weight="bold",
-        color="white", 
+        # FIX: Change title color based on color mode
+        color=rx.color_mode_cond("gray.900", "white"), 
         _hover={"color": project.color + ".8"},
         # Apply negative margin to pull title further left for indentation effect
         margin_left="-15px" 
@@ -254,7 +256,8 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     short_description_text = rx.text(
         project.short_description,
         size="3",
-        color="gray.400", 
+        # FIX: Change description color based on color mode
+        color=rx.color_mode_cond("gray.600", "gray.400"), 
         margin_top="3", 
         # REMOVED margin_bottom
         text_align="left", 
@@ -263,7 +266,8 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     
     # Source Code link
     source_code_link = rx.hstack(
-        rx.text("Source Code:", size="2", weight="bold", color="gray.400"),
+        # FIX: Change label color based on color mode
+        rx.text("Source Code:", size="2", weight="bold", color=rx.color_mode_cond("gray.600", "gray.400")),
         rx.link(
             "Link", 
             href=project.href.to(str),
@@ -336,12 +340,13 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         border_radius="xl",
         padding="0", 
         
-        background="#1e1e1e",
-        box_shadow="lg", 
-        border="1px solid rgba(255, 255, 255, 0.1)", 
+        # FIX: Make card background, shadow, and border conditional based on color mode
+        background=rx.color_mode_cond("white", "#1e1e1e"),
+        box_shadow=rx.color_mode_cond("lg", "lg"), 
+        border=rx.color_mode_cond("1px solid var(--gray-4)", "1px solid rgba(255, 255, 255, 0.1)"), 
         transition="all 0.2s ease-in-out",
         _hover={
-            "box_shadow": "xl",
+            "box_shadow": rx.color_mode_cond("xl", "xl"),
             "transform": "translateY(-2px)",
             "border": hover_border_color 
         }
