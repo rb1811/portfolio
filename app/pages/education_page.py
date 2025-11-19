@@ -24,15 +24,23 @@ EDUCATION_DATA = load_education_data()
 def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     
     logo_filename = edu.get('logo')
+    campus_pic_filename = edu.get('campus_pic') # New key for campus image
     card_href = edu.get("href", "#") 
     location = edu.get('location', '')
     gpa_detail_string = edu.get('details', '') 
+    color_scheme=edu.get('color', 'blue')
 
-    # String Concatenation Fix: Reflex handles the concatenation of a string and a Var.
+    # Prepare paths for logo and campus image
     full_logo_path = rx.cond(
         logo_filename, 
         "/" + logo_filename, 
         "",                           
+    )
+    
+    full_campus_pic_path = rx.cond(
+        campus_pic_filename,
+        "/" + campus_pic_filename,
+        "",
     )
     
     # GPA badge component
@@ -87,10 +95,10 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
         
         rx.link(
             rx.text(
-                edu["degree"],
+                edu["institution"],
                 size="6",
                 weight="bold",
-                color=f"{edu['color']}.400",
+                color=color_scheme,
                 _hover={"color": f"{edu['color']}.300"},
             ),
             href=card_href,
@@ -109,7 +117,7 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     details_and_date = rx.hstack(
         rx.vstack(
             rx.text(
-                edu["institution"],
+                edu["degree"],
                 size="5",
                 weight="bold", 
                 color=rx.color_mode_cond("gray.900", "gray.100"), 
@@ -137,6 +145,29 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
         padding_x="6"
     )
     
+    # Campus Image Component (New)
+    campus_image = rx.cond(
+        full_campus_pic_path != "",
+        rx.box(
+            rx.image(
+                src=full_campus_pic_path,
+                alt=f"Campus image of {edu['institution']}",
+                width="100%",
+                height="auto",
+                object_fit="cover",
+                style={
+                    "aspectRatio": "21/9", # Set a fixed aspect ratio for visual consistency
+                    "filter": "grayscale(10%) contrast(90%)", # Subtle filter for integration with dark mode
+                },
+            ),
+            # Padding removed to make the image span the full width of the card's interior
+            width="100%",
+            border_bottom_radius="xl", 
+            overflow="hidden",
+        ),
+        rx.box() # Empty box if no image is available
+    )
+    
     # Description list (maintained structure)
     description_list = rx.vstack(
         spacing="1",
@@ -147,9 +178,14 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     )
 
     # The final education card structure (VStack)
+    # The image is placed at the bottom, just before the description list
     return rx.vstack(
         title_section,
         details_and_date,
+        
+        # Place the image here
+        campus_image, 
+        
         description_list,
         
         spacing="1",
@@ -194,12 +230,11 @@ def education(*args, **kwargs) -> rx.Component:
             # 'base' and 'md' breakpoints get 1 column, 'lg' breakpoint gets 2 columns.
             columns={"base": "1", "md": "1", "lg": "2"}, 
             spacing="5",
-            width="90%",
-            # max_width="6xl", 
+            width="90%", 
             align_items="stretch" 
         ),
         width="100%",
-        margin_left="20px"
+        margin_left="20px" 
     )
 
 
