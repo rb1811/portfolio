@@ -109,7 +109,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 # Full Description
                 rx.dialog.description(
                     project.full_description,
-                    margin_bottom="10", 
+                    margin_bottom="10px",
+                    margin_top="10px",
                     color=rx.color_mode_cond("gray.700", "gray.300"),
                     text_align="left",
                     padding_x=dialog_padding_x
@@ -131,7 +132,6 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                     # margin_y="3",
                     padding_x=dialog_padding_x,
                     margin_bottom="10px",
-                    # margin_top="10px"
                 ),
                 
                 # Research Paper Link Section
@@ -172,7 +172,7 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 ),
                 justify="start", 
                 width="100%",
-                margin_top="4",
+                margin_top="10px",
                 padding_x=dialog_padding_x, 
             ),
             
