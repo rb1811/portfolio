@@ -1,0 +1,31 @@
+{
+  "profile_pic": "goku.gif",
+  "name": "Prabhat Racherla",
+  "tagline": "Philonoist",
+  "links": [
+    {
+      "name": "Email",
+      "icon": "mail",
+      "href": "mailto:prabhatracherlabhilai@gmail.com",
+      "color": "red"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "linkedin",
+      "href": "https://www.linkedin.com/in/prabhatracherla/",
+      "color": "blue"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "href": "https://github.com/rb1811",
+      "color": "violet"
+    },
+    {
+      "name": "Personal Website",
+      "icon": "globe",
+      "href": "https://rb1811.github.io",
+      "color": "teal"
+    }
+  ]
+}

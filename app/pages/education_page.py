@@ -49,7 +49,7 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
         variant="soft", 
         color_scheme="indigo", 
         size="3",
-        margin_left="1", 
+        margin_left="1px", 
         margin_y="0",
     )
     
@@ -60,8 +60,8 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
             size="4",
             weight="medium",
             color=rx.color_mode_cond("gray.500", "gray.400"),
-            margin_bottom="2",
-            margin_left="4",
+            margin_bottom="2px",
+            margin_left="10px",
             white_space="nowrap",
         ),
         gpa_badge, 
@@ -121,7 +121,7 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
                 size="5",
                 weight="bold", 
                 color=rx.color_mode_cond("gray.900", "gray.100"), 
-                margin_left="4",
+                margin_left="10px",
             ),
             location_and_gpa,
             
