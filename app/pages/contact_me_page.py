@@ -19,6 +19,7 @@ class ContactLink(BaseModel):
 class ContactData(BaseModel):
     """Defines the overall structure of the contact data."""
     profile_pic: str
+    resume: str
     links: typing.List[ContactLink]
 
 

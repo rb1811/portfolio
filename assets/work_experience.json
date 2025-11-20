@@ -103,7 +103,7 @@
                 "projects": [
                     {
                         "description": [
-                            "Developed and deployed a website for handling the accounts of IGIAT."
+                            "Developed and deployed a website for handling the internal accounts of Indo German Institute of Advanced Technology."
                         ],
                         "technology_stack": ["Website Development", "Java"],
                         "title": "Accounts Management Website"

@@ -152,8 +152,8 @@ def company_section(company_data: dict) -> rx.Component:
             rx.image(
                 src=full_logo_path, # Uses the corrected path format: /filename.png
                 alt=f"{full_company_name} logo", # Use full name for alt text
-                width="40px",
-                height="40px",
+                width="80px",
+                height="80px",
                 object_fit="contain",
                 margin_right="3",
                 border_radius="10px", 
