@@ -2,7 +2,7 @@
   {
     "title": "Personal Portfolio",
     "teamsize": 1,
-    "short_description": "A fully functional, static web portfolio developed end-to-end using only *Python* and the *Reflex* framework. Having your own portfolio website to showcase your coding skills adds a different touch",
+    "short_description": "This website is a fully functional, static web portfolio developed end-to-end using only *Python* and the *Reflex* framework. Having your own portfolio website to showcase your coding skills adds a different touch. Why pay money for resume builders website when you can make your own right using AI",
     "full_description": [
       "Developed to showcase execution ability, leveraging a Python-centric skillset for a full-stack result.",
       "Achieved end-to-end web development using the Reflex framework (Python-only), eliminating traditional front-end technologies (HTML/CSS/JS).",
@@ -17,13 +17,16 @@
     "teamsize": 1,
     "short_description": "AI implementation project based on the University of Berkeley's *Pacman* environment, focused on foundational search algorithms.",
     "full_description": [
-      "Implemented fundamental AI algorithms within the *University of Berkeley's open-source Pacman environment*.",
+      "To foster hands-on learning of AI principles, the University of Berkeley has made its PAC-MAN project open source for adoption by other educational institutions.",
+      "Implemented fundamental AI algorithms within the *University of Berkeley's open-source Pacman project environment*.",
       "Integrated and trained agents using classical search strategies Breadth-First Search (BFS), Depth-First Search (DFS).",
       "Applied advanced techniques including *Reinforcement Learning* to enable agents to master the game.",
       "Served as a practical application and demonstration of core AI concepts in a popular environment."
     ],
     "languages_used": ["Python"],
-    "href": "https://github.com/rb1811/Pacman"
+    "href": "https://github.com/rb1811/Pacman",
+    "extra_href": "https://inst.eecs.berkeley.edu/~cs188/fa24/projects/",
+    "extra_href_display_name": "Berkeley Project Course Page"
   },
   {
     "title": "GitHub Trending Visualizer",
@@ -76,7 +79,8 @@
     ],
     "extra_href": "https://www.researchgate.net/publication/389045573_Transmission_in_Benes_Network",
     "languages_used": ["Python","Pygame"],
-    "href": "https://github.com/rb1811/benes-graphics"
+    "href": "https://github.com/rb1811/benes-graphics",
+    "extra_href_display_name": "Research Paper"
   },
   {
     "title": "Social Media Web Crawlers",

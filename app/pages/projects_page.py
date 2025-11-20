@@ -17,15 +17,17 @@ class ProjectData(rx.Base):
     """
     title: str
     short_description: str
-    # FIX 1: Changed full_description to expect a list of strings
     full_description: typing.List[str] 
     teamsize: int 
     href: str # This is now for the "Source Code" link
     languages_used: typing.List[str] # Data source from JSON
     extra_href: typing.Optional[str] = Field(None) # For research papers, etc.
+    # NEW: The display name for the extra link (e.g., "Research Paper", "Course Link")
+    extra_href_display_name: typing.Optional[str] = Field(None)
+    # Optional image path for the project card
+    image: typing.Optional[str] = Field(None) 
     
     color: str = DEFAULT_COLOR
-    # This attribute will hold the languages_used data, ensuring it's a list.
     tech_stack: typing.List[str] = Field(default_factory=list)
 
 
@@ -64,13 +66,12 @@ def load_projects_data() -> typing.List[ProjectData]:
     
     for project_dict in projects_dicts:
         try:
-            # This line requires 'full_description' to be a list in the JSON
             project = ProjectData(**project_dict)
             project.tech_stack = project.languages_used
             processed_projects.append(project)
         except Exception as e:
             # FIX: Added robust error handling for individual item validation failures
-            print(f"Validation Error for item: {project_dict.get('title', 'Unknown Project')}. Check if 'full_description' is a list of strings. Error: {e}")
+            print(f"Validation Error for item: {project_dict.get('title', 'Unknown Project')}. Error: {e}")
 
     print(f"Successfully processed {len(processed_projects)} valid project items.")
     return processed_projects
@@ -93,7 +94,7 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
     # Define common padding for content indentation inside the dialog
     dialog_padding_x = "4"
     
-    # FIX 2: Create a component to render the full description as an unordered list
+    # Create a component to render the full description as an unordered list
     full_description_list = rx.unordered_list(
         rx.foreach(
             project.full_description,
@@ -108,6 +109,65 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
         padding_x=dialog_padding_x,
         margin_bottom="10px",
     )
+    
+    # Conditional image display component
+    project_image = rx.cond(
+        project.image, # If the image field is not None/empty
+        rx.center(
+            rx.image(
+                # Fixed the previous error by directly binding the image path string.
+                src=project.image.to(str),
+                # Styling for full width and mid-height (max 300px)
+                width="100%", 
+                max_height="300px",
+                object_fit="contain", # Ensures the image fits without cropping
+                border_radius="xl",
+                box_shadow="lg",
+                margin_y="6", # Add spacing above and below the image
+                alt=project.title, # Added alt text for accessibility
+            ),
+            width="100%",
+            padding_x=dialog_padding_x,
+            padding_y="10px",
+        )
+    )
+    
+    # NEW: Determine the display name for the extra link
+    extra_link_name = rx.cond(
+        project.extra_href_display_name,
+        project.extra_href_display_name.to(str) + ": ",
+        rx.text("Research Paper: ", weight="bold", white_space="nowrap") # Default fallback text
+    )
+
+    # NEW: Research Paper Link Section uses the dynamic name
+    research_paper_link_section = rx.cond(
+        project.extra_href, 
+        rx.hstack(
+            rx.text(
+                rx.cond(
+                    project.extra_href_display_name,
+                    project.extra_href_display_name + ": ",
+                    "Research Paper: "
+                ),
+                weight="bold", 
+                white_space="nowrap"
+            ),
+            rx.link(
+                "Link", 
+                href=project.extra_href.to(str), 
+                is_external=True,
+                color_scheme=project.color, 
+                text_decoration="underline",
+                _hover={"color": project.color + ".8"},
+                on_click=rx.stop_propagation
+            ),
+            align_items="center",
+            padding_x=dialog_padding_x,
+            margin_y="3",
+            margin_bottom="30px" 
+        )
+    )
+    
     
     return rx.dialog.root(
         rx.dialog.trigger(
@@ -133,12 +193,12 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
             
             # Consolidated content section for uniform padding/spacing
             rx.vstack(
-                # Full Description (Now a bulleted list component)
+                # Full Description 
                 rx.box(
                     full_description_list,
                     width="100%",
-                    text_align="left", # Ensure text is left-aligned
-                    padding="0", # The list itself handles internal padding
+                    text_align="left", 
+                    padding="0", 
                 ),
                 
                 # Source Code Link Section
@@ -158,31 +218,15 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                     margin_bottom="10px",
                 ),
                 
-                # Research Paper Link Section
-                rx.cond(
-                    project.extra_href, 
-                    rx.hstack(
-                        rx.text("Research Paper: ", weight="bold", white_space="nowrap"),
-                        rx.link(
-                            "Link", 
-                            href=project.extra_href.to(str), 
-                            is_external=True,
-                            color_scheme=project.color, 
-                            text_decoration="underline",
-                            _hover={"color": project.color + ".8"},
-                            on_click=rx.stop_propagation
-                        ),
-                        align_items="center",
-                        margin_y="3",
-                        # Increased margin_bottom for space before the footer divider
-                        margin_bottom="30px" 
-                    )
-                ),
+                # Image display (conditionally rendered)
+                project_image,
+                
+                # Extra Link Section (dynamically named)
+                research_paper_link_section,
                 
                 align_items="flex-start",
                 width="100%",
                 padding_y="5",
-                # Removed padding_x here as it's now applied inside the description list
             ),
 
             # Divider before footer
@@ -195,7 +239,6 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 ),
                 justify="start", 
                 width="100%",
-                # Increased margin_top for space after the divider
                 margin_top="20px",
                 padding_x=dialog_padding_x, 
             ),
@@ -213,8 +256,6 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
 def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     """
     A card displaying a single project.
-    Uses Flexbox properties to anchor the 'Read Full Story' button to the bottom
-    and applies explicit, consistent spacing before the button.
     """
     
     teamsize_condition = project.teamsize == 1
@@ -258,7 +299,6 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
             align_items="flex-start",
             width="100%",
             margin_top="3", 
-            # REMOVED margin_bottom to prevent inconsistent spacing
         )
     )
 
@@ -282,7 +322,6 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         # FIX: Change description color based on color mode
         color=rx.color_mode_cond("gray.600", "gray.400"), 
         margin_top="3", 
-        # REMOVED margin_bottom
         text_align="left", 
         width="100%",
     )
