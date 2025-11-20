@@ -1,0 +1,49 @@
+name: Reflex Portfolio Deployment to GitHub Pages
+
+# Only runs manually via the 'Actions' tab ---
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        default: 'Manual deployment triggered for portfolio update.'
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    # Explicitly grant write access to the GITHUB_TOKEN
+    permissions:
+      contents: write # Required by peaceiris/actions-gh-pages for pushing to gh-pages branch
+      pages: write    # Required for GitHub Pages deployments
+      
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip' 
+          
+      - name: Install Dependencies
+        run: |
+          pip install reflex
+          
+      - name: Build and Export Frontend
+        # Reflex will generate the static files into the 'frontend' directory
+        run: |
+          reflex export 
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./frontend
+          commit_message: ${{ github.event.inputs.reason || 'Automated deployment by GitHub Actions' }}
