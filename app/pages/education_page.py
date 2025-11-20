@@ -45,7 +45,7 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     
     # GPA badge component
     gpa_badge = rx.badge(
-        gpa_detail_string,
+        rx.text(gpa_detail_string, size="4"),
         variant="soft", 
         color_scheme="indigo", 
         size="3",
@@ -57,6 +57,15 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     location_and_gpa = rx.hstack(
         rx.text(
             location, 
+            size="4",
+            weight="medium",
+            color=rx.color_mode_cond("gray.500", "gray.400"),
+            margin_bottom="2px",
+            margin_left="10px",
+            white_space="nowrap",
+        ),
+        rx.text(
+            " GPA: ", 
             size="4",
             weight="medium",
             color=rx.color_mode_cond("gray.500", "gray.400"),
