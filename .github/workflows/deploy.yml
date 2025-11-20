@@ -1,21 +1,22 @@
-name: Reflex Portfolio Deployment to GitHub Pages
+name: Reflex Portfolio Deployment
 
-# Allows manual runs from the 'Actions' tab
-on:
+on: 
   workflow_dispatch:
     inputs:
       reason:
         description: 'Reason for manual deployment'
-        required: false
+        required: true
         default: 'Manual deployment triggered for portfolio update.'
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     
-    # Required permissions to write to the gh-pages branch
     permissions:
-      contents: write  
+      contents: write # Required for peaceiris/actions-gh-pages
       pages: write    
       
     steps:
@@ -27,24 +28,30 @@ jobs:
       - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: 'pip'  
+          python-version: '3.11'
           
       - name: 🛠️ Install Dependencies (Reflex)
         run: pip install reflex
-        
-      - name: ✨ Build and Export Frontend
-        # 'reflex export' generates static files into the .web/out directory
-        # This will now build for the root path (/)
-        run: reflex export 
+
+      - name: ✨ Build and Export Frontend (Unzipped)
+        # Use --no-zip to ensure unzipped static files are placed in .web/build/client/
+        run: reflex export --no-zip 
+
+      # CRITICAL STEP: Move static assets from the deep build path to a simple deployment directory.
+      # This fixes the empty gh-pages branch issue.
+      - name: 📂 Prepare Deployment Directory
+        run: |
+          # Create a clean directory for deployment
+          mkdir public
+          # Move all unzipped files into the simple 'public' directory
+          mv .web/build/client/* public/ 
 
       - name: 🚀 Deploy to GitHub Pages
-        # Uses the built-in action to deploy static content
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          # User Page deployment should use the 'gh-pages' branch
           publish_branch: gh-pages
-          # CRITICAL: Publish the Reflex output folder
-          publish_dir: ./.web/out
-          # Simplified commit message
+          # Deploy the simple, predictable 'public' directory
+          publish_dir: ./public 
           commit_message: ${{ github.event.inputs.reason || 'Automated deployment by GitHub Actions' }}
