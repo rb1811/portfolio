@@ -1,46 +1,55 @@
 name: Reflex Portfolio Deployment to GitHub Pages
 
-# ... (on: and jobs: definitions remain the same)
+# Allows manual runs from the 'Actions' tab
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: false
+        default: 'Manual deployment triggered for portfolio update.'
 
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write 
-      pages: write    
-      
-    steps:
-      - name: 📦 Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    # Required permissions to write to the gh-pages branch
+    permissions:
+      contents: write 
+      pages: write 
+      
+    steps:
+      - name: 📦 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
 
-      - name: 🐍 Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: 'pip' 
-          
-      - name: 🛠️ Install Dependencies (Reflex)
-        run: pip install reflex
-          
-      - name: ✨ Build and Export Frontend
-        # The files are generated into .web/out
-        run: reflex export 
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip' 
+          
+      - name: 🛠️ Install Dependencies (Reflex)
+        run: pip install reflex
+          
+      - name: ✨ Build and Export Frontend
+        # 'reflex export' generates static files into the .web/out directory
+        run: reflex export 
 
-      - name: 📂 Prepare Deployment Directory ⬅️ CRITICAL FIX ADDED
-        run: |
-          # Create a non-hidden directory
-          mkdir build
-          # Move the exported files into the new directory
-          mv .web/out/* build/
+      # CRITICAL FIX: Move static assets to a deployment-friendly directory
+      - name: 📂 Prepare Deployment Directory
+        run: |
+          mkdir build
+          # Move the contents of the Reflex output folder into the 'build' folder
+          mv .web/out/* build/ 
 
-      - name: 🚀 Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          # CRITICAL: Publish the new 'build' folder
-          publish_dir: ./build # <--- CHANGED THIS LINE
-          commit_message: ${{ github.event.inputs.reason || 'Automated deployment by GitHub Actions' }}
+      - name: 🚀 Deploy to GitHub Pages
+        # Uses the peaceiris action to deploy static content
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          # IMPORTANT: Publish the new 'build' folder
+          publish_dir: ./build 
+          commit_message: ${{ github.event.inputs.reason || 'Automated deployment by GitHub Actions' }}
