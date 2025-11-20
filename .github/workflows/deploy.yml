@@ -15,7 +15,7 @@ jobs:
     
     # Required permissions to write to the gh-pages branch
     permissions:
-      contents: write 
+      contents: write  
       pages: write    
       
     steps:
@@ -28,13 +28,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: 'pip' 
+          cache: 'pip'  
           
       - name: 🛠️ Install Dependencies (Reflex)
         run: pip install reflex
-          
+        
       - name: ✨ Build and Export Frontend
         # 'reflex export' generates static files into the .web/out directory
+        # This will now build for the root path (/)
         run: reflex export 
 
       - name: 🚀 Deploy to GitHub Pages
@@ -44,5 +45,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           # CRITICAL: Publish the Reflex output folder
-          publish_dir: ./.web/out 
+          publish_dir: ./.web/out
+          # Simplified commit message
           commit_message: ${{ github.event.inputs.reason || 'Automated deployment by GitHub Actions' }}

@@ -5,7 +5,6 @@ config = rx.Config(
     app_name="app", 
     db_url="sqlite:///reflex.db",
     env=rx.Env.DEV,
-    base_path="/portfolio/", 
     plugins=[
         rx.plugins.SitemapPlugin(),
         rx.plugins.TailwindV4Plugin(),
