@@ -1,0 +1,24 @@
+[
+    {
+        "degree": "Masters in Computer Science",
+        "institution": "Arizona State University",
+        "location": "Tempe, USA",
+        "date_range": "08/2016 - 05/2018",
+        "details": "3.73/4.0",
+        "color": "red",
+        "logo": "arizona_state_university.png",
+        "campus_pic":"asu_campus.png",
+        "href": "https://www.asu.edu/"
+    },
+    {
+        "degree": "Bachelors in Computer Science and Engineering",
+        "institution": "Vellore Institute of Technology",
+        "location": "Chennai, India",
+        "date_range": "07/2012 - 05/2016",
+        "details": "8.99/10.0",
+        "color": "teal",
+        "logo": "vellore_institute_of_technology.png",
+        "campus_pic":"vit_campus.png",
+        "href": "https://chennai.vit.ac.in/"
+    }
+]
