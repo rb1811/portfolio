@@ -17,7 +17,8 @@ class ProjectData(rx.Base):
     """
     title: str
     short_description: str
-    full_description: str
+    # FIX 1: Changed full_description to expect a list of strings
+    full_description: typing.List[str] 
     teamsize: int 
     href: str # This is now for the "Source Code" link
     languages_used: typing.List[str] # Data source from JSON
@@ -36,32 +37,42 @@ def load_projects_data() -> typing.List[ProjectData]:
     Maps 'languages_used' to 'tech_stack' for display.
     """
     
-    file_path = os.path.join("assets", "projects_data.json")
+    # NOTE: In a Reflex app, assets should be placed in the project root's 'assets' folder
+    # and Reflex handles compilation/access. Use the direct path for Python loading.
+    file_path = os.path.join(os.getcwd(), "assets", "projects_data.json")
     
     projects_dicts: typing.List[dict] = []
+    
+    # 1. Try to load JSON data
     try:
         if os.path.exists(file_path):
             with open(file_path, 'r') as f:
                 projects_dicts = json.load(f)
+            print(f"Successfully loaded {len(projects_dicts)} raw project items.")
+        else:
+            print(f"Error: Project data file not found at: {file_path}")
             
+    except json.JSONDecodeError as e:
+        print(f"Error decoding project data JSON: {e}")
+        return []
     except Exception as e:
-        print(f"Error loading project data from file, returning empty list: {e}") 
-        
-    # Processed projects list
+        print(f"General error loading project data: {e}") 
+        return []
+
+    # 2. Process and validate projects
     processed_projects: typing.List[ProjectData] = []
     
-    # 1. Instantiate projects
     for project_dict in projects_dicts:
         try:
-            processed_projects.append(ProjectData(**project_dict))
+            # This line requires 'full_description' to be a list in the JSON
+            project = ProjectData(**project_dict)
+            project.tech_stack = project.languages_used
+            processed_projects.append(project)
         except Exception as e:
-            print(f"Error creating ProjectData model for item: {project_dict.get('title', 'Unknown Project')}. Error: {e}")
+            # FIX: Added robust error handling for individual item validation failures
+            print(f"Validation Error for item: {project_dict.get('title', 'Unknown Project')}. Check if 'full_description' is a list of strings. Error: {e}")
 
-
-    for project in processed_projects:
-        project.tech_stack = project.languages_used
-
-
+    print(f"Successfully processed {len(processed_projects)} valid project items.")
     return processed_projects
 
 
@@ -81,6 +92,22 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
     
     # Define common padding for content indentation inside the dialog
     dialog_padding_x = "4"
+    
+    # FIX 2: Create a component to render the full description as an unordered list
+    full_description_list = rx.unordered_list(
+        rx.foreach(
+            project.full_description,
+            lambda item: rx.list.item(
+                item,
+                margin_bottom="10px",
+                color=rx.color_mode_cond("gray.700", "gray.300"),
+                size="3", # Increased font size for better readability
+            ),
+        ),
+        margin_top="20px",
+        padding_x=dialog_padding_x,
+        margin_bottom="10px",
+    )
     
     return rx.dialog.root(
         rx.dialog.trigger(
@@ -106,17 +133,13 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
             
             # Consolidated content section for uniform padding/spacing
             rx.vstack(
-                # Full Description
-                rx.dialog.description(
-                    project.full_description,
-                    margin_bottom="10px",
-                    # Increased margin_top for space between divider and description
-                    margin_top="20px",
-                    color=rx.color_mode_cond("gray.700", "gray.300"),
-                    text_align="left",
-                    padding_x=dialog_padding_x,
-                    size="3", # Increased font size for better readability
-                ), 
+                # Full Description (Now a bulleted list component)
+                rx.box(
+                    full_description_list,
+                    width="100%",
+                    text_align="left", # Ensure text is left-aligned
+                    padding="0", # The list itself handles internal padding
+                ),
                 
                 # Source Code Link Section
                 rx.hstack(
@@ -159,7 +182,7 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 align_items="flex-start",
                 width="100%",
                 padding_y="5",
-                padding_x=dialog_padding_x,
+                # Removed padding_x here as it's now applied inside the description list
             ),
 
             # Divider before footer
