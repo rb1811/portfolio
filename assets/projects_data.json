@@ -2,7 +2,7 @@
   {
     "title": "Personal Portfolio",
     "teamsize": 1,
-    "short_description": "This website is a fully functional, static web portfolio developed end-to-end using only *Python* and the *Reflex* framework. Having your own portfolio website to showcase your coding skills adds a different touch. Why pay money for resume builders website when you can make your own right using AI",
+    "short_description": "This website is a fully functional, static web portfolio developed end-to-end using only *Python* and the *Reflex* framework. Having your own portfolio website to showcase your coding skills adds a different touch. Also why pay money to resume builder website, when you can make your own?",
     "full_description": [
       "Developed to showcase execution ability, leveraging a Python-centric skillset for a full-stack result.",
       "Achieved end-to-end web development using the Reflex framework (Python-only), eliminating traditional front-end technologies (HTML/CSS/JS).",
@@ -126,7 +126,7 @@
     "teamsize": 2,
     "short_description": "Undergraduate Capstone Project: A web-based platform for reporting, tracking, and managing records of missing persons in India.",
     "full_description": [
-      "Final Year Undergraduate Capstone Project that earned the **'Best Project Award'**.",
+      "This Project that earned the **'Best Project Award'** in the final year with a cash prize.",
       "Developed a comprehensive *web platform* for reporting, management, and *tracking of missing persons* across India.",
       "Utilized *Python* for core backend logic and *Neo4J* for efficient, relationship-based data storage.",
       "Designed to facilitate secure and reliable record management."

@@ -4,6 +4,7 @@ import reflex as rx
 
 from rxconfig import config
 from .pages.base_page import base_page
+from .pages.about_page import about_page
 
 # Import all pages from the 'pages' directory
 from . import pages
@@ -12,24 +13,26 @@ class State(rx.State):
     pass
 
 # --- 1. Define the custom font links using rx.el.link ---
-ICEBERG_FONT_LINKS = [
-    # Preconnect for faster loading
+ALL_FONT_LINKS = [
+    # Preconnect for faster loading (needed only once)
     rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
     rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin="anonymous"),
+    
+    # Combined link for all custom fonts: Iceberg and Mountains of Christmas
     rx.el.link(
         rel="stylesheet",
-        href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap",
+        href="https://fonts.googleapis.com/css2?family=Iceberg&family=Mountains+of+Christmas:wght@400;700&family=Iceland&display=swap",
     ),
 ]
 # -----------------------------------------------------------
 
 
 def index() -> rx.Component:  
-    return base_page()  
+    return about_page()  
 
 # --- 2. Initialize the App with head_components ---
 app = rx.App(
-    head_components=ICEBERG_FONT_LINKS,
+    head_components=ALL_FONT_LINKS,
 )
 # --------------------------------------------------
 

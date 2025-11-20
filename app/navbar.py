@@ -57,7 +57,7 @@ def navbar_icons_item(text: str, icon: str) -> rx.Component:
             rx.icon(icon), 
             rx.text(
                 text, 
-                size="4", 
+                size="5", 
                 weight="medium",
                 white_space="nowrap", # Ensures text stays on one line
             )
@@ -71,7 +71,7 @@ def navbar_icons_menu_item(text: str, icon: str) -> rx.Component:
         rx.link(
             rx.hstack(
                 rx.icon(icon, size=16), 
-                rx.text(text, size="3", weight="medium")
+                rx.text(text, size="4", weight="medium")
             ),
             href=get_nav_link_href(text) # Use corrected function
         )

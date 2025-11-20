@@ -24,7 +24,7 @@ EDUCATION_DATA = load_education_data()
 def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     
     logo_filename = edu.get('logo')
-    campus_pic_filename = edu.get('campus_pic') # New key for campus image
+    campus_pic_filename = edu.get('campus_pic')
     card_href = edu.get("href", "#") 
     location = edu.get('location', '')
     gpa_detail_string = edu.get('details', '') 
@@ -157,22 +157,29 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     # Campus Image Component (New)
     campus_image = rx.cond(
         full_campus_pic_path != "",
-        rx.box(
-            rx.image(
-                src=full_campus_pic_path,
-                alt=f"Campus image of {edu['institution']}",
+        # FIX: Wrap the image display in rx.link to make it clickable
+        rx.link(
+            rx.box(
+                rx.image(
+                    src=full_campus_pic_path,
+                    alt=f"Campus image of {edu['institution']}",
+                    width="100%",
+                    height="auto",
+                    object_fit="cover",
+                    style={
+                        "aspectRatio": "21/9", # Set a fixed aspect ratio for visual consistency
+                        "filter": "grayscale(10%) contrast(90%)", # Subtle filter for integration with dark mode
+                    },
+                ),
+                # Padding removed to make the image span the full width of the card's interior
                 width="100%",
-                height="auto",
-                object_fit="cover",
-                style={
-                    "aspectRatio": "21/9", # Set a fixed aspect ratio for visual consistency
-                    "filter": "grayscale(10%) contrast(90%)", # Subtle filter for integration with dark mode
-                },
+                border_bottom_radius="xl", 
+                overflow="hidden",
             ),
-            # Padding removed to make the image span the full width of the card's interior
+            href=card_href,            # <-- The key to making it a link
+            is_external=True,
             width="100%",
-            border_bottom_radius="xl", 
-            overflow="hidden",
+            on_click=rx.stop_propagation # Use stop_propagation if the parent container is also clickable
         ),
         rx.box() # Empty box if no image is available
     )
@@ -187,7 +194,6 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     )
 
     # The final education card structure (VStack)
-    # The image is placed at the bottom, just before the description list
     return rx.vstack(
         title_section,
         details_and_date,
