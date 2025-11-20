@@ -1,1 +1,0 @@
-import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-BQ7vsrp6.js";var t=[[`circle`,{cx:`12.1`,cy:`12.1`,r:`1`,key:`18d7e5`}]],n=e(`dot`,t);export{t as __iconNode,n as default};

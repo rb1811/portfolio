@@ -1,1 +1,0 @@
-import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-BQ7vsrp6.js";var t=[[`path`,{d:`M20 6 9 17l-5-5`,key:`1gmf2c`}]],n=e(`check`,t);export{t as __iconNode,n as default};
