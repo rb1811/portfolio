@@ -16,7 +16,7 @@ def load_work_data():
     file_path = os.path.join("assets", "work_experience.json")
     
     try:
-        # CRITICAL: Read the data from the external file
+        # Read the data from the external file
         with open(file_path, 'r') as f:
             loaded_data = json.load(f)
             return loaded_data
@@ -68,7 +68,7 @@ def project_details(project: dict) -> rx.Component:
                 margin_bottom="2"
             ),
             
-            # 2. Description Bullet Points (CRITICAL: Loop through the array)
+            # 2. Description Bullet Points (CRIT Loop through the array)
             *[
                 rx.text(
                     f"• {desc}", # Add the bullet point symbol
@@ -215,7 +215,7 @@ def company_section(company_data: dict) -> rx.Component:
 def work(*args, **kwargs) -> rx.Component:
     return rx.center(
         rx.vstack(
-            # CRITICAL: Loop through the loaded data
+            # Loop through the loaded data
             *[company_section(data) for data in WORK_EXPERIENCE_DATA],
             
             spacing="5",

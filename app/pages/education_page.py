@@ -157,7 +157,7 @@ def education_card(edu: typing.Dict[str, rx.Var]) -> rx.Component:
     # Campus Image Component (New)
     campus_image = rx.cond(
         full_campus_pic_path != "",
-        # FIX: Wrap the image display in rx.link to make it clickable
+        # Wrap the image display in rx.link to make it clickable
         rx.link(
             rx.box(
                 rx.image(
@@ -241,7 +241,6 @@ def education(*args, **kwargs) -> rx.Component:
                     padding="0" 
                 ),
             ),
-            # FIX: Changed list of strings to a dictionary for responsive props
             # 'base' and 'md' breakpoints get 1 column, 'lg' breakpoint gets 2 columns.
             columns={"base": "1", "md": "1", "lg": "2"}, 
             spacing="5",

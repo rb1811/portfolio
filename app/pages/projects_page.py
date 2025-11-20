@@ -70,7 +70,7 @@ def load_projects_data() -> typing.List[ProjectData]:
             project.tech_stack = project.languages_used
             processed_projects.append(project)
         except Exception as e:
-            # FIX: Added robust error handling for individual item validation failures
+            # Added robust error handling for individual item validation failures
             print(f"Validation Error for item: {project_dict.get('title', 'Unknown Project')}. Error: {e}")
 
     print(f"Successfully processed {len(processed_projects)} valid project items.")
@@ -308,7 +308,7 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         project.title,
         size="6",
         weight="bold",
-        # FIX: Change title color based on color mode
+        # Change title color based on color mode
         color=rx.color_mode_cond("gray.900", "white"), 
         _hover={"color": project.color + ".8"},
         # Apply negative margin to pull title further left for indentation effect
@@ -319,7 +319,7 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     short_description_text = rx.text(
         project.short_description,
         size="3",
-        # FIX: Change description color based on color mode
+        # Change description color based on color mode
         color=rx.color_mode_cond("gray.600", "gray.400"), 
         margin_top="3", 
         text_align="left", 
@@ -328,7 +328,7 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     
     # Source Code link
     source_code_link = rx.hstack(
-        # FIX: Change label color based on color mode
+        # Change label color based on color mode
         rx.text("Source Code:", size="2", weight="bold", color=rx.color_mode_cond("gray.600", "gray.400")),
         rx.link(
             "Link", 
@@ -402,7 +402,7 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         border_radius="xl",
         padding="0", 
         
-        # FIX: Make card background, shadow, and border conditional based on color mode
+        # Make card background, shadow, and border conditional based on color mode
         background=rx.color_mode_cond("white", "#1e1e1e"),
         box_shadow=rx.color_mode_cond("lg", "lg"), 
         border=rx.color_mode_cond("1px solid var(--gray-4)", "1px solid rgba(255, 255, 255, 0.1)"), 

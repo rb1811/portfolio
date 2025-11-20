@@ -5,7 +5,7 @@ FROM python:3.12
 WORKDIR /app
 
 # Set the HOME environment variable to the working directory.
-# This is CRITICAL for Reflex/Python modules running as non-root (user 1000)
+# This is for Reflex/Python modules running as non-root (user 1000)
 # to correctly place cache and config files inside the writable volume mount.
 ENV HOME /app
 RUN apt-get update && apt-get install -y bash && rm -rf /var/lib/apt/lists/*

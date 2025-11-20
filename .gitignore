@@ -22,6 +22,11 @@ __pycache__/
 
 # Reflex/Web Project Specific
 .web/
+rx_frontend.lock
+
+# Database
+*.db
+reflex.db 
 
 # Python history
 .python_history
@@ -33,4 +38,3 @@ __pycache__/
 .dotnet/
 
 .bash_history
-.web/

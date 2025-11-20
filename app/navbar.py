@@ -43,7 +43,6 @@ class NavbarState(rx.State):
 def get_nav_link_href(text: str) -> str:
     """
     Determines the correct URL path for a navigation item.
-    FIX: Correctly handles 'Contact-Me' to route to '/contact'.
     """
     if text == "Contact-Me":
         return "/contact"
@@ -101,7 +100,6 @@ def resume_download_icon() -> rx.Component:
     )
     
     # 3. Define the Clickable/Hoverable Trigger Box
-    # FIX: Use a consistently sized box with padding to ensure a reliable hover area.
     trigger_box = rx.box(
         icon_element,
         padding="4px",
