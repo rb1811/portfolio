@@ -1,12 +1,10 @@
 {
   "profile_pic": "goku.gif",
-  "name": "Prabhat Racherla",
-  "tagline": "Philonoist",
   "links": [
     {
       "name": "Email",
       "icon": "mail",
-      "href": "mailto:prabhatracherlabhilai@gmail.com",
+      "href": "prabhatracherlabhilai@gmail.com",
       "color": "red"
     },
     {

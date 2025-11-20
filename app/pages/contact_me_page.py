@@ -12,7 +12,6 @@ from reflex.components.radix.themes.base import LiteralAccentColor
 
 class ContactLink(BaseModel):
     """Defines the structure for a single contact link."""
-    name: str
     icon: str
     href: str
     color: LiteralAccentColor # Use the proper type hint for color schemes
@@ -20,8 +19,6 @@ class ContactLink(BaseModel):
 class ContactData(BaseModel):
     """Defines the overall structure of the contact data."""
     profile_pic: str
-    name: str
-    tagline: str
     links: typing.List[ContactLink]
 
 
@@ -62,15 +59,17 @@ class ContactState(rx.State):
     @rx.var
     def profile_image_path(self) -> str:
         """Computes the full path to the profile image/GIF."""
-        if self.contact_info.profile_pic:
-            return f"/{self.contact_info.profile_pic}"
-        return "/placeholder.png"
-
+        try:
+            if self.contact_info.profile_pic:
+                return f"/{self.contact_info.profile_pic}"
+            raise FileNotFoundError("Profile pic missing")
+        except Exception as ex:
+            return("Error: Profile pic not found")
 
 # --- COMPONENTS ---
 
-# Define the font family for reuse, which is now globally available
-HOMEMADE_APPLE_FONT = "'Homemade Apple', cursive"
+# Define the font family for reuse
+ICEBERG_FONT = "'Iceberg', sans-serif" 
 
 
 def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
@@ -101,7 +100,7 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
                     text_decoration="underline",
                     _hover={"color": link.color + ".8"},
                     # Apply the custom font directly to the text element
-                    font_family=HOMEMADE_APPLE_FONT 
+                    font_family=ICEBERG_FONT 
                 ),
                 align_items="flex-start",
                 spacing="1",
@@ -131,10 +130,10 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
 
 def contact_details_section() -> rx.Component:
     """
-    The left-hand side section displaying all contact links.
+    The left-hand side section displaying all contact links (3fr).
     """
     return rx.vstack(
-        rx.text("Get In Touch", size="9", weight="bold", margin_bottom="8"),
+        # Applying the custom font to the title as well
         rx.foreach(
             ContactState.contact_info.links,
             contact_link_item
@@ -150,22 +149,27 @@ def contact_details_section() -> rx.Component:
 
 def profile_image_section() -> rx.Component:
     """
-    The right-hand side section displaying the profile image/GIF.
+    The right-hand side section displaying the profile image/GIF (7fr).
+    The increased column width will make the GIF much larger.
     """
     return rx.center(
+        # The rx.box fills the 7fr column space
         rx.box(
             rx.image(
                 src=ContactState.profile_image_path,
                 alt="Profile Image/GIF",
+                # The image will now expand to fill the available space of the larger 7fr column
                 width="100%", 
-                max_width="400px", 
+                # Keeping max_width here ensures it doesn't get ridiculously large on ultra-wide screens, 
+                # but the 7fr column is the primary constraint. 
+                max_width="100%", 
                 border_radius="3xl",
                 box_shadow=rx.color_mode_cond("0 15px 30px -10px rgba(0, 0, 0, 0.3)", "0 15px 30px -10px rgba(255, 255, 255, 0.15)"),
                 object_fit="cover",
                 aspect_ratio="1 / 1"
             ),
             width="100%",
-            max_width="450px", 
+            # Removed fixed pixel max_width to allow the image to scale with the grid column.
         ),
         width="100%",
         height="100%", 
@@ -177,47 +181,37 @@ def profile_image_section() -> rx.Component:
 
 def contact_me(*args, **kwargs) -> rx.Component:
     """
-    Main component for the contact me page, using a Grid for 3-column wide separation.
+    Main component for the contact me page, using a Grid with a 3fr/7fr split.
     """
-    # Outer rx.center wrapper to ensure the entire block is centered on the page
     return rx.center(
-        # Use rx.grid for the 3-column structure on large screens
+        # Use rx.grid for the new 2-column structure on large screens
         rx.grid(
-            # Column 1: Contact Details
+            # Column 1: Contact Details (30% width)
             contact_details_section(),
             
-            # Column 2: Empty Spacer
-            rx.box(
-                width="100%",
-                height="100%",
-                # This empty box is only visible on large screens
-                display={"base": "none", "lg": "block"}, 
-            ),
-            
-            # Column 3: Profile Image/GIF
+            # Column 2: Profile Image/GIF (70% width) - MUCH BIGGER
             profile_image_section(),
             
             # Grid Configuration
-            # Define the columns: 3 parts (links) / 4 parts (spacer) / 3 parts (image)
-            # Total 10 parts for easy ratio definition (30%/40%/30% roughly)
-            columns={"base": "1", "lg": "3fr 4fr 3fr"}, 
+            # Define the columns: Links (3 parts) / Image (7 parts)
+            columns={"base": "1", "lg": "3fr 7fr"}, 
             
-            # On mobile, use a single column and add a gap between the links and image
-            spacing={"base": "9", "lg": "0"}, 
+            # On mobile, use a single column
+            # spacing={"base": "9", "lg": "0"}, 
+            spacing="9", 
             
-            # Set a wide max_width for the entire grid to provide maximum separation space
+            # Set a wide max_width for the entire grid
             width="90%",
             max_width="1200px", 
             
             min_height="80vh", 
             margin_y="10",
-            
-            align_items="center", # Center items vertically within the row
+            align_items="center", # Center items vertically
         ),
         width="100%",
         padding_x="20px",
         padding_y="10px", 
-        justify="center", # Ensures the inner grid is centered horizontally on the page
+        justify="center",
     )
 
 

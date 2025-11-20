@@ -12,16 +12,13 @@ class State(rx.State):
     pass
 
 # --- 1. Define the custom font links using rx.el.link ---
-# We use rx.el.link (the raw HTML element component) for head_components 
-# to ensure it generates a self-closing <link> tag without validation errors.
-HOMEMADE_APPLE_FONT_LINKS = [
+ICEBERG_FONT_LINKS = [
     # Preconnect for faster loading
     rx.el.link(rel="preconnect", href="https://fonts.googleapis.com"),
     rx.el.link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin="anonymous"),
-    # The main font stylesheet link
     rx.el.link(
         rel="stylesheet",
-        href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap",
+        href="https://fonts.googleapis.com/css2?family=Iceberg&display=swap",
     ),
 ]
 # -----------------------------------------------------------
@@ -31,12 +28,12 @@ def index() -> rx.Component:
     return base_page()  
 
 # --- 2. Initialize the App with head_components ---
-# We add the font links here so they are globally available in the HTML <head>
 app = rx.App(
-    head_components=HOMEMADE_APPLE_FONT_LINKS,
+    head_components=ICEBERG_FONT_LINKS,
 )
 # --------------------------------------------------
 
+# --- ALL ORIGINAL ROUTES PRESERVED ---
 app.add_page(index)
 app.add_page(pages.about_page, route="/about")
 app.add_page(pages.work_page, route="/work")
