@@ -32,7 +32,7 @@ def index() -> rx.Component:
 
 # --- 2. Initialize the App with head_components ---
 app = rx.App(
-    enable_state=False,
+    # enable_state=False,
     head_components=ALL_FONT_LINKS,
 )
 # --------------------------------------------------

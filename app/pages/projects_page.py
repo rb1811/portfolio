@@ -2,7 +2,7 @@ import reflex as rx
 import typing
 import json
 import os
-from pydantic import Field 
+from pydantic import Field, BaseModel
 from .base_page import base_page
 
 
@@ -10,9 +10,9 @@ from .base_page import base_page
 DEFAULT_COLOR = "indigo"
 
 # --- Structured Data Class Definition ---
-class ProjectData(rx.Base):
+class ProjectData(BaseModel):
     """
-    Defines the structure of a single project item using rx.Base (Pydantic).
+    Defines the structure of a single project item using (Pydantic).
     This ensures type-safe access to project attributes.
     """
     title: str

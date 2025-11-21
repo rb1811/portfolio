@@ -178,6 +178,7 @@ def navbar_icons() -> rx.Component:
                     resume_download_icon(),
                     margin_left="5px",
                 ),
+                rx.color_mode.button(), 
                 
                 # 2. Navigation Links Group (Centered)
                 rx.hstack(
@@ -203,20 +204,33 @@ def navbar_icons() -> rx.Component:
         
         rx.mobile_and_tablet(
             rx.hstack(
-                rx.link(
-                    rx.hstack(
-                        rx.heading("Prabhat Racherla", size="6", weight="bold"),
-                        align_items="center",
+                # --- START FIX: Grouping the Name, Printer, and Color Mode ---
+                rx.hstack(
+                    # 1. Name
+                    rx.link(
+                        rx.hstack(
+                            rx.heading("Prabhat Racherla", size="6", weight="bold"),
+                            align_items="center",
+                        ),
+                        href="/about"
                     ),
-                    href="/about"
+                    
+                    # 2. Printer Icon
+                    rx.box(
+                        resume_download_icon(),
+                        margin_left="2", 
+                    ),
+                    
+                    # 3. Color Mode Button
+                    rx.color_mode.button(), 
+                    
+                    spacing="3", # Spacing between Name, Printer, and Mode Button
+                    align_items="center",
+                    flex_shrink=0, # Prevents this group from shrinking
                 ),
+                # --- END FIX ---
                 
-                # Use the new dedicated component for the icon/tooltip
-                rx.box(
-                    resume_download_icon(),
-                    margin_right="3", 
-                ),
-                
+                # The Menu Button remains separate to be pushed to the right
                 rx.menu.root(
                     rx.menu.trigger(rx.icon("menu", size=30)),
                     rx.menu.content(
@@ -226,9 +240,10 @@ def navbar_icons() -> rx.Component:
                         navbar_icons_menu_item("Projects", "folder-git-2"),
                         navbar_icons_menu_item("Contact-Me", "contact-round"), 
                     ),
-                    justify="end",
                 ),
-                justify="between",
+                
+                # This ensures the new Left Group and the Menu are far apart
+                justify="between", 
                 align_items="center",
             ),
         ),
