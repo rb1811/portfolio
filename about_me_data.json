@@ -4,11 +4,11 @@
     "personal_insights": [
         {
             "title": "A Digital Statement",
-            "content": "As a seasoned Backend Engineer, my desire for a personal website was long hindered by a simple knowledge gap: frontend development. Discovering the Reflex framework and harnessing the capability of AI for implementation—was the game-changer. This portfolio is also a deliberate rejection of the 'one-page resume' tyranny and the proliferation of paid resume-builder services. It's high time to move beyond font size 9, single page resume to showcase the full, unconstrained breadth of one's imagination and best work."
+            "content": "As a seasoned Backend Engineer, my desire for a personal website was long hindered by a simple knowledge gap: frontend development. Discovering the Reflex framework and harnessing the capability of AI for implementation—was the game-changer. This portfolio is also a deliberate rejection of the 'one-page resume' tyranny and the proliferation of paid resume-builder services. It's was long due on my side to move beyond font size 9 single page resume, to showcase the full, unconstrained breadth of one's imagination and best work."
         },
         {
             "title": "Wealth Architecture",
-            "content": "Recently, I've added genuine wealth creation to my life’s focus. Inspired by foundational texts like *The Richest Man in Babylon*, *The Psychology of Money*, and *Rich Dad Poor Dad*, I've internalized the unambiguous lesson: the '996' grind serves only to make your CEO rich enough to worry about finding parking for their yacht, while you struggle to find parking for your car. We moved from black slavery 200 years ago to corporate slavery today. I wish to be an employee or a freelancer, not a chattel, and that distinction matters profoundly."
+            "content": "RecentlI've recently started prioritizing genuine wealth creation, inspired by foundational financial texts. Reading books like The Richest Man in Babylon, The Psychology of Money, and Rich Dad Poor Dad has been eye-opening. The core lesson is clear: relying solely on the intense '996' work culture primarily serves to maximize the wealth of C-suite executives, often leaving me, the dedicated employee, perpetually chasing my own financial and life stability. My goal now is to establish a working relationship—whether as an employee or a freelancer—that is mutually beneficial and values my contribution as a true partner, not just a resource."
         },
         {
             "title": "The Value of Decency",
@@ -16,7 +16,7 @@
         }
     ],
     "footnote": {
-        "content": "PS: And yes, I was the brain, and my AI was the highly-paid, bug-fixing, problem-solver, corporate-slave, that worked 9-9-6. I didn't feel any shame in exploiting it to get this built, while I drank scotch",
+        "content": "PS: And yes, I was the brain, and my AI was the highly-paid, bug-fixing, problem-solver, that did 996. I didn't feel any shame in exploiting it to get this built, while I sipped scotch",
         "ai_meme": "ai_meme.png"
     }
 }

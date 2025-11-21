@@ -1,0 +1,1 @@
+import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-DOa9LVdE.js";var t=[[`path`,{d:`M17 7 7 17`,key:`15tmo1`}],[`path`,{d:`M17 17H7V7`,key:`1org7z`}]],n=e(`arrow-down-left`,t);export{t as __iconNode,n as default};

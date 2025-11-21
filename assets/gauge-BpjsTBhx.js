@@ -1,0 +1,1 @@
+import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-DOa9LVdE.js";var t=[[`path`,{d:`m12 14 4-4`,key:`9kzdfg`}],[`path`,{d:`M3.34 19a10 10 0 1 1 17.32 0`,key:`19p75a`}]],n=e(`gauge`,t);export{t as __iconNode,n as default};
