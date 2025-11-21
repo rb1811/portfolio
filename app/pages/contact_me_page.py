@@ -8,7 +8,7 @@ from .base_page import base_page
 from reflex.components.radix.themes.base import LiteralAccentColor
 
 
-# --- Structured Data Class Definition ---
+# --- Structured Data Class Definition (unchanged) ---
 
 class ContactLink(BaseModel):
     """Defines the structure for a single contact link."""
@@ -26,11 +26,10 @@ class ContactData(BaseModel):
     name: str = "Prabhat Racherla"
 
 
-# --- DATA LOADING AND STATE ---
+# --- DATA LOADING AND STATE (unchanged) ---
 
 def load_contact_data() -> ContactData:
     """Loads contact data from 'assets/contact_me.json'."""
-    # Assuming 'assets' folder is at the project root level
     file_path = os.path.join(os.getcwd(), "assets", "contact_me.json")
     
     try:
@@ -74,19 +73,16 @@ class ContactState(rx.State):
         return ""
 
 
-# --- COMPONENTS ---
+# --- SHARED COMPONENTS ---
 
-# Define the font family for reuse
 ICEBERG_FONT = "'Iceberg', sans-serif" 
+MAX_CONTENT_WIDTH = "1200px"
 
 
 def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
-    """
-    Creates a single hyperlinked contact item.
-    """
+    """Creates a single hyperlinked contact item."""
     return rx.link(
         rx.hstack(
-            # Icon 
             rx.icon(
                 tag=link.icon,
                 width="40px",  
@@ -95,12 +91,10 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
                 margin_right="6",
                 min_width="2.5em", 
             ),
-            
-            # Text is the URL/Handle
             rx.vstack(
                 rx.text(
                     link.href,
-                    size='7', 
+                    size={'base': '6', 'md': '7'},
                     weight="medium",
                     color_scheme=link.color, 
                     text_decoration="underline",
@@ -118,7 +112,6 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
         width="100%", 
         padding="6", 
         border_radius="xl", 
-        # Interactive block style
         _hover={
             "background": rx.color_mode_cond("var(--gray-3)", "var(--gray-a3)"), 
             "cursor": "pointer",
@@ -129,21 +122,18 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
             ),
         },
         transition="all 0.2s ease-in-out",
-        margin_y="4",
+        margin_y="2",
     )
 
 def qrcode_section() -> rx.Component:
-    """
-    Component to display the QR code, placed immediately below the links.
-    """
+    """Component to display the QR code."""
     return rx.cond(
         ContactState.qrcode_image_path,
         rx.center(
             rx.vstack(
-                # Updated text
                 rx.text(
-                    "Download me", 
-                    size="7", 
+                    "Download Me",
+                    size={'base': '6', 'md': '7'}, 
                     weight="bold", 
                     color=rx.color_mode_cond("black", "white"),
                     text_align="center",
@@ -152,119 +142,159 @@ def qrcode_section() -> rx.Component:
                 ),
                 rx.image(
                     src=ContactState.qrcode_image_path,
-                    alt="Resume QR Code (Dummy)",
-                    # Increased size
+                    alt="Resume QR Code",
                     width="100%",
                     max_width="250px",
                     max_height="250px", 
                     border_radius="lg",
                     box_shadow="lg",
                     margin_bottom="4",
-                    margin_left="50px"
                 ),
                 width="100%",
                 max_width="250px",
                 align_items="center",
-                padding="6",
-                padding_top="10", # Added padding above the QR code for separation
+                padding_y="4",
+                border_top="1px solid var(--gray-5)",
             ),
             width="100%",
-            justify_content="flex-start", # Align left to match links
-            padding_x="6",
+            justify_content="center", 
+            padding_x={"base": "0", "md": "6"},
         )
     )
 
+def profile_image_component() -> rx.Component:
+    """The core image/GIF component."""
+    return rx.image(
+        src=ContactState.profile_image_path,
+        alt="Profile Image/GIF",
+        width="100%", 
+        max_width="100%", 
+        border_radius="3xl",
+        box_shadow=rx.color_mode_cond("0 15px 30px -10px rgba(0, 0, 0, 0.3)", "0 15px 30px -10px rgba(255, 255, 255, 0.15)"),
+        object_fit="cover",
+        aspect_ratio="1 / 1"
+    )
 
-def contact_details_section() -> rx.Component:
+# --- LAYOUTS ---
+
+def desktop_contact_me_layout() -> rx.Component:
     """
-    The left-hand side section displaying all contact links, followed by the QR code.
-    No need for flex-grow spacer anymore.
+    Desktop (lg) and above layout: 3fr (Details) | 7fr (Image) Grid.
     """
-    return rx.vstack(
-        # All Links
+    contact_details_section = rx.vstack(
         rx.foreach(
             ContactState.contact_info.links,
             contact_link_item
         ),
-        
-        # QR Code Section (Immediately below the links)
         qrcode_section(),
-        
-        # Removed the rx.box(flex_grow=1) spacer
-        
         align_items="flex-start",
         width="100%",
-        # Critical: Remove height 100% since we don't need the column to stretch 
-        # to the image height for forced alignment.
-        height="auto", 
+        height="100%", 
         padding_y="5",
-        padding_x={"base": "0", "md": "5"},
+        padding_right="5",
         justify_content="flex-start", 
     )
 
-
-def profile_image_section() -> rx.Component:
-    """
-    The right-hand side section displaying the profile image/GIF (7fr).
-    """
-    return rx.center(
+    profile_image_section = rx.center(
         rx.box(
-            rx.image(
-                src=ContactState.profile_image_path,
-                alt="Profile Image/GIF",
-                width="100%", 
-                max_width="100%", 
-                border_radius="3xl",
-                box_shadow=rx.color_mode_cond("0 15px 30px -10px rgba(0, 0, 0, 0.3)", "0 15px 30px -10px rgba(255, 255, 255, 0.15)"),
-                object_fit="cover",
-                aspect_ratio="1 / 1"
-            ),
-            height="100%", 
+            profile_image_component(),
             width="100%",
+            height="100%",
+            max_width="500px",
         ),
         width="100%",
         height="100%", 
         padding_y="5",
-        padding_x={"base": "0", "md": "5"},
         justify_content="center",
+        align_items="center",
+    )
+    
+    return rx.grid(
+        contact_details_section,
+        profile_image_section,
+        columns="3fr 7fr", 
+        spacing="9", 
+        width="100%",
+        height="auto", 
+        align_items="flex-start", 
+    )
+
+def mobile_contact_me_layout() -> rx.Component:
+    """
+    Mobile and Tablet (base/md) layout: simple vertical stack in full-width cards.
+    """
+    
+    # 1. Image Card (Top)
+    image_card = rx.card(
+        rx.center(
+            profile_image_component(),
+            width="100%",
+        ),
+        width="100%",
+        padding="6",
+    )
+    
+    # 2. Links/QR Card (Bottom)
+    links_and_qr = rx.card(
+        rx.vstack(
+            
+            # All Links
+            rx.foreach(
+                ContactState.contact_info.links,
+                contact_link_item
+            ),
+            
+            # QR Code Section (Centered and full width)
+            qrcode_section(),
+
+            align_items="center",
+            width="100%",
+        ),
+        width="100%",
+        padding="6",
+        margin_top="6",
+    )
+
+    return rx.vstack(
+        image_card,
+        links_and_qr,
+        width="100%",
+        spacing="0",
+        align_items="center",
     )
 
 
 def contact_me(*args, **kwargs) -> rx.Component:
     """
-    Main component for the contact me page.
+    Main component for the contact me page with responsive layout switch.
     """
     return rx.center(
-        rx.grid(
-            # Column 1: Contact Details (3fr)
-            contact_details_section(),
+        rx.vstack(
+            rx.desktop_only(desktop_contact_me_layout()),
+            rx.mobile_and_tablet(mobile_contact_me_layout()),
             
-            # Column 2: Profile Image/GIF (7fr)
-            profile_image_section(),
+            # Use 95% width on mobile to give slight margin, and full width on desktop
+            width={"base": "95%", "md": "90%", "lg": "100%"}, 
+            max_width=MAX_CONTENT_WIDTH, 
             
-            # Grid Configuration
-            columns={"base": "1", "lg": "3fr 7fr"}, 
-            spacing="9", 
-            width="90%",
-            max_width="1200px", 
+            # FIX 2: Increased top padding for better gap below the navbar
+            padding_top="50px", # Increased gap below the navbar
+            padding_bottom="10",
             
-            # Now the grid height depends only on the content
-            height="auto", 
+            # Reduced horizontal padding on the wrapper for mobile 
+            # as individual items handle their padding now.
+            padding_x={"base": "0", "md": "5"}, 
             
-            # Use align_items="flex-start" to align the top of the columns
-            align_items="flex-start", 
-            margin_y="10",
+            # This ensures the vstack content is centered horizontally
+            align_items="center", 
         ),
+        # FIX 1: Ensure the outer center component pushes the content to the true center
         width="100%",
-        padding_x="20px",
-        padding_y="10px", 
         justify="center",
-        
-        # Ensure content starts from the top of the page (below header)
-        align_items="flex-start", 
-        padding_top="50px", 
+        align_items="flex-start", # Ensure content starts high up
     )
 
 
 def contact_me_page() -> rx.Component: 
+    # Use base_page to wrap the content
     return base_page(contact_me())

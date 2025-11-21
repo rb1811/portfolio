@@ -21,7 +21,7 @@ def get_resume_path() -> str:
                 data = json.load(f)
                 resume_file = data.get('resume')
                 if resume_file:
-                    # Prepend / for Reflex to correctly serve the asset from the root
+                    # Return the path prefixed with /, ensuring it's a root-relative path.
                     return f"/{resume_file}"
         
         # If file doesn't exist or 'resume' key is missing, return empty string.
@@ -34,8 +34,30 @@ def get_resume_path() -> str:
 
 
 class NavbarState(rx.State):
-    """State to hold static asset links for the navbar."""
+    """State to hold static asset links for the navbar and handle download logic."""
     resume_path: str = get_resume_path()
+
+    def download_resume(self):
+        """
+        Generates a client-side event to open the PDF URL in a new browser tab.
+        This allows the user to view the PDF before deciding to save it.
+        """
+        # 1. Get the root-relative path from the state variable.
+        relative_path = self.resume_path
+        
+        # We need to escape the path in case it contains quotes, though unlikely here.
+        safe_path = relative_path.replace("'", "\\'")
+        
+        # 2. Construct the absolute URL using window.location.origin 
+        # 3. Use window.open with '_blank' to open in a new tab.
+        js_code = f"""
+            var fullUrl = window.location.origin + '{safe_path}';
+            // Open the URL in a new tab (_blank). The browser will handle 
+            // displaying the PDF viewer or prompting the user to save it.
+            window.open(fullUrl, '_blank');
+        """
+        # Use rx.call_script to execute the JavaScript code directly.
+        return rx.call_script(js_code)
 
 
 # --- Component Functions ---
@@ -88,7 +110,7 @@ def resume_download_icon() -> rx.Component:
     # 1. Define the Tooltip Content
     tooltip_content: typing.Union[str, rx.Var] = rx.cond(
         is_available,
-        "Download Me",
+        "View Resume (New Tab)", # Updated text to reflect new behavior
         "Resume link not available",
     )
     
@@ -99,40 +121,41 @@ def resume_download_icon() -> rx.Component:
         color=rx.cond(is_available, "var(--gray-12)", "var(--gray-7)"),
     )
     
-    # 3. Define the Clickable/Hoverable Trigger Box
-    trigger_box = rx.box(
-        icon_element,
-        padding="4px",
-        border_radius="md",
-        # Use pointer cursor if available, otherwise 'not-allowed'
-        cursor=rx.cond(is_available, "pointer", "not-allowed"),
-        opacity=rx.cond(is_available, 1.0, 0.6),
-        # Add visual feedback on hover only if available
-        _hover=rx.cond(
-            is_available, 
-            {"background_color": rx.color("accent", 5), "opacity": 0.8}, 
-            {} # No hover effect if not available
-        ),
-        # Handle the click action (for both desktop and mobile taps)
-        on_click=rx.cond(is_available, rx.redirect(NavbarState.resume_path, is_external=True), None), 
-    )
-
-    # 4. Wrap the trigger box in the tooltip
+    # 3. Define the Clickable/Hoverable Trigger Box using rx.box
     return rx.tooltip( 
-        trigger_box, 
+        rx.box( # Use rx.box as the trigger
+            icon_element,
+            padding="4px",
+            border_radius="md",
+            # Use pointer cursor if available, otherwise 'not-allowed'
+            cursor=rx.cond(is_available, "pointer", "not-allowed"),
+            opacity=rx.cond(is_available, 1.0, 0.6),
+            # Add visual feedback on hover only if available
+            _hover=rx.cond(
+                is_available, 
+                {"background_color": rx.color("accent", 5), "opacity": 0.8}, 
+                {} # No hover effect if not available
+            ),
+            
+            # Attach the custom download method to the click event.
+            on_click=rx.cond(
+                is_available,
+                NavbarState.download_resume,
+                None, # Do nothing if not available
+            )
+            
+        ),
         content=tooltip_content, 
         side="bottom",
-        # Keep the z_index high for visibility over the navbar
         z_index="9999", 
-        # Minimal delay to aid reliable detection
         delay_duration=100, 
-        # Force it to render even if the trigger is slightly obscured (though z_index should handle this)
-        # Using rx.box instead of rx.link inside the tooltip simplifies the DOM structure for the trigger.
     )
 
 
 def navbar_icons() -> rx.Component:
     """The main navbar component."""
+    
+    # Updated icons to use valid Lucide names (kebab-case)
     return rx.box(
         rx.desktop_only(
             rx.hstack(
@@ -160,9 +183,9 @@ def navbar_icons() -> rx.Component:
                 rx.hstack(
                     navbar_icons_item("Work", "briefcase-business"),
                     navbar_icons_item("Education", "school"),
-                    navbar_icons_item("Skills", "chart-bar"),
+                    navbar_icons_item("Skills", "bar-chart"), 
                     navbar_icons_item("Projects", "folder-git-2"),
-                    navbar_icons_item("Contact-Me", "contact-round"),
+                    navbar_icons_item("Contact-Me", "contact-round"), 
                     spacing="7", 
                     flex_grow=1, 
                     justify="center", 
@@ -199,9 +222,9 @@ def navbar_icons() -> rx.Component:
                     rx.menu.content(
                         navbar_icons_menu_item("Work", "briefcase-business"),
                         navbar_icons_menu_item("Education", "school"),
-                        navbar_icons_menu_item("Skills", "chart-bar"),
+                        navbar_icons_menu_item("Skills", "bar-chart"), 
                         navbar_icons_menu_item("Projects", "folder-git-2"),
-                        navbar_icons_menu_item("Contact-Me", "contact-round"),
+                        navbar_icons_menu_item("Contact-Me", "contact-round"), 
                     ),
                     justify="end",
                 ),

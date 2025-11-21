@@ -99,10 +99,13 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
         rx.foreach(
             project.full_description,
             lambda item: rx.list.item(
-                item,
+                rx.text(
+                    item,
+                    size="3", # Increased font size for better readability
+                    color=rx.color_mode_cond("gray.700", "gray.300"),
+                    word_break="break-word", # FIX 2: Ensure long words/strings break
+                ),
                 margin_bottom="10px",
-                color=rx.color_mode_cond("gray.700", "gray.300"),
-                size="3", # Increased font size for better readability
             ),
         ),
         margin_top="20px",
@@ -199,6 +202,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                     width="100%",
                     text_align="left", 
                     padding="0", 
+                    # FIX 2: Added overflow wrap to the container to assist with text breaking
+                    overflow_wrap="break-word", 
                 ),
                 
                 # Source Code Link Section
@@ -211,7 +216,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                         color_scheme=project.color,
                         text_decoration="underline",
                         _hover={"color": project.color + ".8"},
-                        on_click=rx.stop_propagation
+                        on_click=rx.stop_propagation,
+                        word_break="break-all" # FIX 2: Break long URLs
                     ),
                     align_items="center",
                     padding_x=dialog_padding_x,
@@ -246,8 +252,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
             # Keyword argument placement
             padding="24px", 
         ),
-        # Increased max_width to make dialog bigger 
-        max_width="800px" 
+        # FIX 1: Increased max_width to make dialog bigger 
+        max_width={"base": "95vw", "sm": "95vw", "md": "700px"} 
     )
 
 
@@ -439,7 +445,9 @@ def projects(*args, **kwargs) -> rx.Component:
                 align_items="stretch", # Ensures all cards in a row match the height of the tallest card
             ),
             width="90%",
-            max_width="1200px"
+            max_width="100%",
+            padding_top="10px", # Adding padding to match the Contact page and create gap from navbar
+            padding_bottom="40px",
         ),
         width="100%",
         padding_x="20px",

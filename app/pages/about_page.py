@@ -48,7 +48,6 @@ ABOUT_ME_DATA = load_about_me_data()
 PROFILE_PIC_PATH = "/my_profile_pic.jpg"
 # Define the custom font family string
 TITLE_FONT = "'Mountains of Christmas', serif"
-
 CONTENT_FONT = "'Iceland', serif"
 
 
@@ -65,6 +64,8 @@ def section_header(text: str, custom_font: typing.Optional[str] = None) -> rx.Co
         "border_bottom": "2px solid var(--accent-8)",
         "padding_bottom": "2",
         "font_family": TITLE_FONT,
+        "white_space": "normal", # Ensure header text wraps
+        "width": "100%", # Ensure it takes up available width
     }
     
     if custom_font:
@@ -83,9 +84,10 @@ def bio_paragraph(text: str) -> rx.Component:
         text,
         size="8",
         margin_bottom="4",
-        line_height="1",
+        line_height="1.2", 
         color=rx.color_mode_cond("gray.700", "gray.300"),
-        font_family=CONTENT_FONT
+        font_family=CONTENT_FONT,
+        white_space="normal" 
     )
 
 def personal_insight_card(data: dict) -> rx.Component:
@@ -102,9 +104,10 @@ def personal_insight_card(data: dict) -> rx.Component:
             rx.text(
                 data["content"],
                 size="8",
-                line_height="1",
+                line_height="1.2", 
                 color=rx.color_mode_cond("gray.700", "gray.400"),
-                font_family=CONTENT_FONT
+                font_family=CONTENT_FONT,
+                white_space="normal", 
             ),
             align_items="flex-start",
             spacing="3",
@@ -118,72 +121,83 @@ def personal_insight_card(data: dict) -> rx.Component:
 
 def profile_picture_component() -> rx.Component:
     """
-    The profile picture component.
+    The large profile picture component for desktop view.
     """
-    # This component is now used in the top_bio_section
     return rx.center( 
         rx.vstack(
             rx.avatar(
                 src=PROFILE_PIC_PATH,
-                size="9",
+                size="9", # Large size for desktop
                 fallback="PR",
                 radius="full",
                 border="4px solid var(--accent-9)",
-                box_shadow="lg"
+                box_shadow="lg",
+                color_scheme="blue",
+                color="blue.500",
+                background="rgba(66, 153, 225, 0.1)", 
             ),
-            rx.box(height="10px"), 
             align_items="center",
             width="100%",
         ),
-        # On large screens, limit the width to hold the picture, on mobile, it takes full width
-        width={"base": "100%", "lg": "300px"}, 
-        # On mobile, we might want to center the profile picture section
-        align_self={"base": "center", "lg": "flex-start"},
-        margin_bottom={"base": "8", "lg": "0"},
+        width="300px", # Fixed desktop width
+        align_self="flex-start",
+        margin_bottom="0",
     )
 
 def top_bio_content() -> rx.Component:
-    """The title and main biography text, spanning the left space."""
+    """The title and main biography text."""
     return rx.vstack(
         # 1. Professional Bio Header
         section_header("The Engineer"),
+        
         # 2. Bio Paragraph
         bio_paragraph(ABOUT_ME_DATA["standard_bio"]),
         align_items="flex-start",
-        width="100%", # Takes up all available space in the HSTACK/FLEX row
+        width="100%",
     )
 
 def top_bio_section() -> rx.Component:
     """
-    Combines the main bio text (left) and the profile picture (right).
-    This section is centered within the overall page layout.
+    Combines the main bio text and the profile picture (desktop only).
     """
-    # Only render this section if the bio content exists
     if not ABOUT_ME_DATA["standard_bio"]:
         return rx.box()
 
-    # Determine if the profile picture should be included
-    profile_pic = None
-    if ABOUT_ME_DATA.get("my_selfie", False):
-        profile_pic = profile_picture_component()
+    # --- FIX APPLIED HERE ---
+    # The LARGE profile picture is only visible on desktop and only if my_selfie is true.
+    desktop_large_pic = rx.cond(
+        # Condition 1: Check the flag (honor the flag)
+        ABOUT_ME_DATA.get("my_selfie", False),
+        
+        # Condition 2: Check the screen size (hide on mobile)
+        rx.desktop_only(
+            rx.box(
+                profile_picture_component(),
+                align_self="flex-start", 
+            )
+        ),
+        # If my_selfie is False, render an empty box (no change for mobile/desktop)
+        rx.box()
+    )
+    # --- END FIX ---
     
     # The inner flex holds the content and has the width constraint
     inner_flex = rx.flex(
-        top_bio_content(),
-        profile_pic, # Will be None or the profile component
+        top_bio_content(), # Text/Header (always the main column)
+        desktop_large_pic, # Large Profile Pic (only visible on desktop AND if my_selfie=True)
         
-        # Layout control: Bio on left (order 0), Pic on right (order 1)
+        # Layout control: Column on mobile (text spans full width), Row on desktop
         direction={"base": "column", "lg": "row"},
         spacing="8",
-        width="90%", # Changed from fixed pixels to 90%
+        width="90%", 
         align_items="flex-start",
-        padding_x={"base": "4", "md": "0"},
+        padding_x={"base": "0", "md": "0"}, 
     )
     
     # The outer center component ensures the inner flex is centered horizontally
     return rx.center( 
         inner_flex,
-        width="100%", # Take full width of the parent container
+        width="100%", 
         padding_y="8",
     )
 
@@ -191,7 +205,6 @@ def bottom_insights_section() -> rx.Component:
     """
     The section for personal insights, which spans the full width.
     """
-    # Only render if there are insights
     if not ABOUT_ME_DATA["personal_insights"]:
         return rx.box()
 
@@ -209,8 +222,8 @@ def bottom_insights_section() -> rx.Component:
                 width="100%"
             ),
             align_items="flex-start",
-            width="90%", # Changed from fixed pixels to 90%
-            padding_x={"base": "4", "md": "0"},
+            width="90%", # Match the top section width
+            padding_x={"base": "0", "md": "0"},
             padding_bottom="8",
         ),
         width="100%",
@@ -269,7 +282,6 @@ def about_me_section() -> rx.Component:
         top_bio_section(),
         rx.box(height="10px"), # Visual spacer
         bottom_insights_section(),
-        # NEW: Add the footnote section at the very end
         footnote_section(),
         
         width="100%",

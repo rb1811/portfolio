@@ -31,11 +31,14 @@ jobs:
           python-version: '3.11'
           
       - name: 🛠️ Install Dependencies (Reflex)
-        run: pip install reflex
+        run: pip install reflex==0.8.19
 
       - name: ✨ Build and Export Frontend (Unzipped)
         # Use --no-zip to ensure unzipped static files are placed in .web/build/client/
-        run: reflex export --no-zip 
+        run: reflex export --no-zip
+        env:
+          # Set this to an empty string to enable static-only mode for deployment.
+          RX_API_URL: '' 
 
       # CRITICAL STEP: Move static assets from the deep build path to a simple deployment directory.
       # This fixes the empty gh-pages branch issue.
