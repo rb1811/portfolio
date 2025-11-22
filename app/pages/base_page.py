@@ -15,7 +15,7 @@ def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component
             padding="1em",
             width="100%",
         ),
-        rx.color_mode.button(position="bottom-right"),
+        # rx.color_mode.button(position="bottom-right"),
         # rx.box( 
         #     rx.hstack(
         #         rx.color_mode.button(), 
