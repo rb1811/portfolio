@@ -3,48 +3,33 @@ import json
 import os
 import typing
 
-# --- Data Loading and State for Static Assets ---
-
-# The hardcoded base URL has been removed. 
-# The application will now rely on the filename being resolved 
-# relative to the app's root path.
+# --- Data Loading for Static Assets ---
 
 def get_resume_path() -> str:
     """
     Reads the 'resume' filename from assets/contact_me.json and returns 
-    the root-relative URL path to the resume asset (e.g., "/prabhat_racherla_resume.pdf").
+    the root-relative URL path to the resume asset.
     """
     file_path = os.path.join("assets", "contact_me.json")
     try:
         if os.path.exists(file_path):
             with open(file_path, 'r') as f:
                 data = json.load(f)
-                
-                # Get the filename from the JSON, e.g., "prabhat_racherla_resume.pdf"
                 filename = data.get('resume', "")
-                
                 if filename:
-                    # Return the path prefixed with a slash to be root-relative
-                    # This should resolve to the correct asset path managed by Reflex.
                     return f"/{filename.lstrip('/')}"
-        
         return "" 
-        
     except Exception as e:
-        # Print error message for debugging purposes
         print(f"Error reading contact_me.json or parsing resume path: {e}")
         return "" 
 
 
-# --- Component Functions ---
+# --- Component Functions (Unchanged) ---
 
 def get_nav_link_href(text: str) -> str:
-    """
-    Determines the correct URL path for a navigation item.
-    """
+    """Determines the correct URL path for a navigation item."""
     if text == "Contact-Me":
         return "/contact"
-    # Converts "Work", "Projects" to "/work", "/projects"
     return f"/{text.lower().replace('-', '')}"
 
 
@@ -56,7 +41,7 @@ def navbar_icons_item(text: str, icon: str) -> rx.Component:
                 text, 
                 size="5", 
                 weight="medium",
-                white_space="nowrap", # Ensures text stays on one line
+                white_space="nowrap",
             )
         ), 
         href=get_nav_link_href(text)
@@ -76,41 +61,33 @@ def navbar_icons_menu_item(text: str, icon: str) -> rx.Component:
 
 
 def resume_download_icon() -> rx.Component:
-    """
-    Renders the printer icon wrapped in a Reflex link for external navigation.
-    """
+    """Renders the printer icon wrapped in a Reflex link for external navigation."""
     is_available = get_resume_path() != ""
     icon_size = 24
     
-    # 1. Define the Tooltip Content 
     tooltip_content: typing.Union[str, rx.Var] = rx.cond(
         is_available,
         "Download Me", 
         "Resume link not available",
     )
     
-    # 2. Define the Icon Component
     icon_element = rx.icon(
         "printer", 
         size=icon_size, 
         color=rx.cond(is_available, "var(--gray-12)", "var(--gray-7)"),
     )
     
-    # 3. Define the Link Trigger
     return rx.tooltip( 
-        rx.link( # Using rx.link for the download target
+        rx.link(
             icon_element,
-            # Use the root-relative path directly as the href
             href=rx.cond(
                 is_available,
                 get_resume_path(), 
                 "#" # Use '#' as a fallback if the link isn't available
             ),
-            # is_external is important to make sure it functions as a native <a> tag link
             is_external=True, 
             target="_blank",  # Opens the PDF in a new browser tab
             
-            # Styling for the hoverable area
             padding="4px",
             border_radius="md",
             cursor=rx.cond(is_available, "pointer", "not-allowed"),
@@ -132,7 +109,6 @@ def resume_download_icon() -> rx.Component:
 def navbar_icons() -> rx.Component:
     """The main navbar component."""
     
-    # Updated icons to use valid Lucide names (kebab-case)
     return rx.box(
         rx.desktop_only(
             rx.hstack(
@@ -174,7 +150,6 @@ def navbar_icons() -> rx.Component:
                 # 3. Empty Placeholder (Right)
                 rx.box(), 
 
-                # Set main properties on the outer desktop Hstack
                 justify="between",
                 align_items="center",
                 width="100%", 
@@ -231,8 +206,11 @@ def navbar_icons() -> rx.Component:
                 width="100%", # Ensure the mobile Hstack takes full width
             ),
         ),
+        
+        # --- CRITICAL FIXES APPLIED HERE (Affects the Color Mode Button Functionality) ---
         bg=rx.color("accent", 3),
         padding="1em",
         width="100%",
-        max_width="100%", # Ensures full width
+        max_width="100%", 
+        z_index="999", # Added: Ensures the navbar (and the button) is above other content
     )
