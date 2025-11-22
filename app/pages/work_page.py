@@ -271,8 +271,10 @@ def work(*args, **kwargs) -> rx.Component:
         ),
         # Removed top padding, keeping it clean
         width="100%",
+        id="work",
     )
 
 
 def work_page() -> rx.Component: 
-     return base_page(work())
+    #  return base_page(work())
+     return work()

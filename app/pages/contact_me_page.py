@@ -298,10 +298,12 @@ def contact_me(*args, **kwargs) -> rx.Component:
         # Ensure the outer center component pushes the content to the true center
         width="100%",
         justify="center",
-        align_items="flex-start", 
+        align_items="flex-start",
+        id="contactme"
     )
 
 
 def contact_me_page() -> rx.Component: 
     # Use base_page to wrap the content
-    return base_page(contact_me())
+    return contact_me()
+    # return base_page(contact_me())

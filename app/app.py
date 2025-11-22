@@ -3,11 +3,11 @@
 import reflex as rx
 
 from rxconfig import config
-from .pages.base_page import base_page
-from .pages.about_page import about_page
+# from .pages.about_page import about_page # REMOVED: No longer imported individually
 
 # Import all pages from the 'pages' directory
 from . import pages
+from .pages.base_page import base_page # NEW: Import the modified base_page
 
 class State(rx.State):
     pass
@@ -26,22 +26,48 @@ ALL_FONT_LINKS = [
 ]
 # -----------------------------------------------------------
 
+# --- NEW: Consolidate all page components into one vertical stack ---
+def single_page_content() -> rx.Component:
+    """Combines all logical 'pages' into a single scrollable view."""
+    return rx.vstack(
+        # IMPORTANT: These page functions must be updated to wrap their content
+        # in rx.box(..., id="section_name") for scrolling to work.
+        pages.about_page(),     # Links to /#about
+        pages.work_page(),      # Links to /#work
+        pages.education_page(), # Links to /#education
+        pages.skills_page(),    # Links to /#skills
+        pages.projects_page(),  # Links to /#projects
+        pages.contact_me_page(),# Links to /#contact
+        
+        spacing="9", 
+        width="100%",
+        align="center",
+    )
 
 def index() -> rx.Component:  
-    return about_page()  
+    # Now calls the new base_page with the combined content
+    return base_page(single_page_content())  
 
 # --- 2. Initialize the App with head_components ---
 app = rx.App(
     enable_state=False,
     head_components=ALL_FONT_LINKS,
+    style={
+        "body": {
+            # Define the CSS Variable for Navbar Height
+            "--navbar-height": "75px", 
+            # We keep this for smooth scrolling, but it's not the primary fix.
+            "scroll-behavior": "smooth", 
+        }
+    }
 )
 # --------------------------------------------------
 
-# --- ALL ORIGINAL ROUTES PRESERVED ---
+# --- UPDATED ROUTES: Only keep the root route ---
 app.add_page(index)
-app.add_page(pages.about_page, route="/about")
-app.add_page(pages.work_page, route="/work")
-app.add_page(pages.contact_me_page, route="/contact")
-app.add_page(pages.skills_page, route="/skills")
-app.add_page(pages.projects_page, route="/projects")
-app.add_page(pages.education_page, route="/education")
+# app.add_page(pages.about_page, route="/about") # REMOVED
+# app.add_page(pages.work_page, route="/work") # REMOVED
+# app.add_page(pages.contact_me_page, route="/contact") # REMOVED
+# app.add_page(pages.skills_page, route="/skills") # REMOVED
+# app.add_page(pages.projects_page, route="/projects") # REMOVED
+# app.add_page(pages.education_page, route="/education") # REMOVED

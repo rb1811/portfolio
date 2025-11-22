@@ -1,30 +1,21 @@
 import reflex as rx
-from ..navbar import navbar_icons
-from .default_content import about_me
+from .navbar import navbar_icons
+# from .default_content import about_me # REMOVED: No longer needed here
 
-def base_page(child: rx.Component = about_me(), *args, **kwargs) -> rx.Component:
+# base_page now MUST accept the combined content as an argument
+def base_page(child: rx.Component, *args, **kwargs) -> rx.Component:
     
     return rx.fragment(
+        # 1. The Navbar is rendered first. The 'sticky' position will make it float.
+        navbar_icons(),
+        
+        # 2. The single, long, scrollable content goes here.
+        # Removed the outer padding, letting the content itself manage its spacing.
         rx.box(
-            navbar_icons(),
-            padding="1em",
+            child, # This is the single_page_content() from app.py
             width="100%",
+            padding="1em", # Removed this to give the content full width/control
+            margin_top="200px",
+            margin_bottom="200px",
         ),
-        rx.box(
-            child,
-            padding="1em",
-            width="100%",
-        ),
-        # rx.color_mode.button(position="bottom-right"),
-        # rx.box( 
-        #     rx.hstack(
-        #         rx.color_mode.button(), 
-        #         spacing="2",
-        #         align_items="center",
-        #     ),
-        #     position="fixed",
-        #     bottom="20px", 
-        #     right="20px",
-        #     z_index="100",
-        # )  
     )

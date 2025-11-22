@@ -154,8 +154,7 @@ def acquisition() -> rx.Component:
 
 def skills_page() -> rx.Component: 
     # Use base_page to wrap the content
-    return base_page(
-        rx.center(
+        return rx.center(
             rx.vstack(
                 rx.divider(width="100%", size="4"),
                 acquisition(),
@@ -165,6 +164,21 @@ def skills_page() -> rx.Component:
                 spacing="8"
             ),
             width="100%",
-            padding_x="6"
+            padding_x="6",
+            id="skills"
         )
-    )
+    
+    # return base_page(
+    #     rx.center(
+    #         rx.vstack(
+    #             rx.divider(width="100%", size="4"),
+    #             acquisition(),
+    #             width="90%",
+    #             max_width="4xl",
+    #             padding_y="12",
+    #             spacing="8"
+    #         ),
+    #         width="100%",
+    #         padding_x="6"
+    #     )
+    # )

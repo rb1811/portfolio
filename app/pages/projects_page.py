@@ -431,8 +431,10 @@ def projects(*args, **kwargs) -> rx.Component:
         width="100%",
         padding_x="20px",
         padding_y="10px", 
+        id="projects",
     )
 
 
 def projects_page() -> rx.Component: 
-    return base_page(projects())
+    # return base_page(projects())
+    return projects()

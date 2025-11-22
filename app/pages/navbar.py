@@ -3,7 +3,7 @@ import json
 import os
 import typing
 
-# --- Data Loading for Static Assets ---
+# --- Data Loading for Static Assets (UNCHANGED) ---
 
 def get_resume_path() -> str:
     """
@@ -24,13 +24,19 @@ def get_resume_path() -> str:
         return "" 
 
 
-# --- Component Functions (Unchanged) ---
+# --- Component Functions ---
 
 def get_nav_link_href(text: str) -> str:
-    """Determines the correct URL path for a navigation item."""
-    if text == "Contact-Me":
-        return "/contact"
-    return f"/{text.lower().replace('-', '')}"
+    """UPDATED: Determines the correct URL path for a navigation item (now uses fragments)."""
+    # Convert 'Contact-Me' to 'contact', 'Work' to 'work', etc.
+    section_id = text.lower().replace('-', '')
+    
+    # 'About' links to the root URL (which is the top of the page)
+    if section_id == "about":
+        return "/"
+        
+    # All others use the fragment identifier for smooth scrolling
+    return f"/#{section_id}"
 
 
 def navbar_icons_item(text: str, icon: str) -> rx.Component:
@@ -61,7 +67,7 @@ def navbar_icons_menu_item(text: str, icon: str) -> rx.Component:
 
 
 def resume_download_icon() -> rx.Component:
-    """Renders the printer icon wrapped in a Reflex link for external navigation."""
+    """Renders the printer icon wrapped in a Reflex link for external navigation. (UNCHANGED)"""
     is_available = get_resume_path() != ""
     icon_size = 24
     
@@ -107,7 +113,7 @@ def resume_download_icon() -> rx.Component:
 
 
 def navbar_icons() -> rx.Component:
-    """The main navbar component."""
+    """The main navbar component with sticky positioning."""
     
     return rx.box(
         rx.desktop_only(
@@ -123,7 +129,8 @@ def navbar_icons() -> rx.Component:
                         ),
                         align_items="center",
                     ),
-                    href="/about"
+                    # UPDATED: Link to root to scroll to the top (#about)
+                    href="/" 
                 ),
                 
                 # Resume Icon
@@ -166,7 +173,8 @@ def navbar_icons() -> rx.Component:
                             rx.heading("Prabhat Racherla", size="6", weight="bold"),
                             align_items="center",
                         ),
-                        href="/about"
+                        # UPDATED: Link to root
+                        href="/"
                     ),
                     
                     # 2. Printer Icon
@@ -178,9 +186,11 @@ def navbar_icons() -> rx.Component:
                     # 3. Color Mode Button
                     rx.color_mode.button(), 
                     
-                    spacing="3", # Spacing between Name, Printer, and Mode Button
+                    spacing="3",
                     align_items="center",
-                    flex_shrink=0, # Prevents this group from shrinking
+                    flex_shrink=0,
+                    position="fixed", # <<-- ADDED
+                    top="0",
                 ),
                 # --- END Grouping ---
                 
@@ -200,17 +210,19 @@ def navbar_icons() -> rx.Component:
                     ),
                 ),
                 
-                # This ensures the new Left Group and the Menu are far apart
                 justify="between", 
                 align_items="center",
-                width="100%", # Ensure the mobile Hstack takes full width
+                width="100%",
             ),
         ),
         
-        # --- CRITICAL FIXES APPLIED HERE (Affects the Color Mode Button Functionality) ---
+        # --- CRITICAL STYLING FOR STICKY NAVBAR ---
         bg=rx.color("accent", 3),
-        padding="1em",
+        padding="20px",
         width="100%",
         max_width="100%", 
-        z_index="999", # Added: Ensures the navbar (and the button) is above other content
+        z_index="999", 
+        # THE TWO LINES BELOW MAKE IT STICKY
+        position="fixed", # <<-- ADDED
+        top="0",           # <<-- ADDED
     )

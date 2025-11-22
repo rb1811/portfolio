@@ -285,12 +285,15 @@ def about_me_section() -> rx.Component:
         footnote_section(),
         
         width="100%",
-        spacing="0" # Control spacing between the main sections manually
+        spacing="0", # Control spacing between the main sections manually
+        id="about"
+        
     )
 
 def about_page() -> rx.Component:
      # No need for an extra center here, as the sections handle their own centering
-     return base_page(
-        about_me_section(),
-        title="About Me"
-     )
+    #  return base_page(
+    #     about_me_section(),
+    #     title="About Me"
+    #  )
+    return about_me_section()

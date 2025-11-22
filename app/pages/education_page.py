@@ -351,8 +351,9 @@ def education(*args, **kwargs) -> rx.Component:
         padding_x={"base": "20px", "md": "40px", "lg": "10vw", "xl": "15vw"}, 
         padding_top="10px",
         padding_bottom="40px",
+        id="education",
     )
 
 
 def education_page() -> rx.Component: 
-     return base_page(education())
+     return education()
