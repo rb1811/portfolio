@@ -1,3 +1,7 @@
+.states
+.web
+assets/external/
+*.py[cod]
 # Operating System Files
 .DS_Store
 Thumbs.db
@@ -26,7 +30,7 @@ rx_frontend.lock
 
 # Database
 *.db
-reflex.db 
+reflex.db
 
 # Python history
 .python_history

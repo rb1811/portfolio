@@ -36,14 +36,6 @@ def get_resume_path() -> str:
         return "" 
 
 
-class NavbarState(rx.State):
-    """State to hold static asset links for the navbar."""
-    # State now holds the root-relative path
-    resume_path: str = get_resume_path()
-
-    # The custom download_resume function is removed, as linking is handled by rx.link.
-
-
 # --- Component Functions ---
 
 def get_nav_link_href(text: str) -> str:
@@ -87,9 +79,7 @@ def resume_download_icon() -> rx.Component:
     """
     Renders the printer icon wrapped in a Reflex link for external navigation.
     """
-    # Use Reflex-compatible comparison: check if the path variable is non-empty.
-    # We must use rx.Var comparison to avoid VarTypeError
-    is_available = NavbarState.resume_path != ""
+    is_available = get_resume_path() != ""
     icon_size = 24
     
     # 1. Define the Tooltip Content 
@@ -113,7 +103,7 @@ def resume_download_icon() -> rx.Component:
             # Use the root-relative path directly as the href
             href=rx.cond(
                 is_available,
-                NavbarState.resume_path, 
+                get_resume_path(), 
                 "#" # Use '#' as a fallback if the link isn't available
             ),
             # is_external is important to make sure it functions as a native <a> tag link
@@ -211,7 +201,7 @@ def navbar_icons() -> rx.Component:
                     ),
                     
                     # 3. Color Mode Button
-                    # rx.color_mode.button(), 
+                    rx.color_mode.button(), 
                     
                     spacing="3", # Spacing between Name, Printer, and Mode Button
                     align_items="center",

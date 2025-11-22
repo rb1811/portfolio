@@ -2,13 +2,12 @@ import reflex as rx
 import typing
 import json
 import os
-import time
 from pydantic import BaseModel, Field
 from .base_page import base_page 
 from reflex.components.radix.themes.base import LiteralAccentColor
 
 
-# --- Structured Data Class Definition (unchanged) ---
+# --- Structured Data Class Definition ---
 
 class ContactLink(BaseModel):
     """Defines the structure for a single contact link."""
@@ -26,10 +25,11 @@ class ContactData(BaseModel):
     name: str = "Prabhat Racherla"
 
 
-# --- DATA LOADING AND STATE (unchanged) ---
+# --- DATA LOADING (Global Constant) ---
 
 def load_contact_data() -> ContactData:
     """Loads contact data from 'assets/contact_me.json'."""
+    # NOTE: os.getcwd() might be unreliable in some environments, but we keep it for robustness.
     file_path = os.path.join(os.getcwd(), "assets", "contact_me.json")
     
     try:
@@ -38,11 +38,14 @@ def load_contact_data() -> ContactData:
                 data = json.load(f)
                 return ContactData(**data)
         else:
-            print(f"Error: Contact data file not found at: {file_path}")
+            # Fallback for a static build environment where the path might be flatter
+            file_path = os.path.join("assets", "contact_me.json")
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                return ContactData(**data)
             
     except Exception as e:
         print(f"Error loading contact data: {e}") 
-        pass
         
     return ContactData(
         profile_pic="", 
@@ -54,23 +57,19 @@ def load_contact_data() -> ContactData:
 CONTACT_DATA: ContactData = load_contact_data()
 
 
-class ContactState(rx.State):
-    """State to hold contact data."""
-    contact_info: ContactData = CONTACT_DATA
-    
-    @rx.var
-    def profile_image_path(self) -> str:
-        """Computes the full path to the profile image/GIF."""
-        if self.contact_info.profile_pic:
-            return f"/{self.contact_info.profile_pic}"
-        return ""
+# --- STATIC PATH COMPUTATION FUNCTIONS ---
 
-    @rx.var
-    def qrcode_image_path(self) -> str:
-        """Computes the full path to the QR code image."""
-        if self.contact_info.qrcode:
-            return f"/{self.contact_info.qrcode}"
-        return ""
+def get_profile_image_path() -> str:
+    """Computes the full path to the profile image/GIF."""
+    if CONTACT_DATA.profile_pic:
+        return f"/{CONTACT_DATA.profile_pic}"
+    return ""
+
+def get_qrcode_image_path() -> str:
+    """Computes the full path to the QR code image."""
+    if CONTACT_DATA.qrcode:
+        return f"/{CONTACT_DATA.qrcode}"
+    return ""
 
 
 # --- SHARED COMPONENTS ---
@@ -79,8 +78,8 @@ ICEBERG_FONT = "'Iceberg', sans-serif"
 MAX_CONTENT_WIDTH = "1200px"
 
 
-def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
-    """Creates a single hyperlinked contact item."""
+def contact_link_item(link: ContactLink) -> rx.Component:
+    """Creates a single hyperlinked contact item using static data."""
     return rx.link(
         rx.hstack(
             rx.icon(
@@ -98,7 +97,7 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
                     weight="medium",
                     color_scheme=link.color, 
                     text_decoration="underline",
-                    _hover={"color": link.color + ".8"},
+                    _hover={"color": f"var(--{link.color}-9)"}, 
                     font_family=ICEBERG_FONT 
                 ),
                 align_items="flex-start",
@@ -124,48 +123,62 @@ def contact_link_item(link: rx.Var[ContactLink]) -> rx.Component:
         transition="all 0.2s ease-in-out",
         margin_y="2",
     )
+    
+# --- STATIC LINK GENERATOR ---
+# This list comprehension replaces rx.foreach to generate static components.
+STATIC_CONTACT_LINKS = [
+    contact_link_item(link) for link in CONTACT_DATA.links
+]
+
 
 def qrcode_section() -> rx.Component:
-    """Component to display the QR code."""
-    return rx.cond(
-        ContactState.qrcode_image_path,
-        rx.center(
-            rx.vstack(
-                rx.text(
-                    "Download Me",
-                    size={'base': '6', 'md': '7'}, 
-                    weight="bold", 
-                    color=rx.color_mode_cond("black", "white"),
-                    text_align="center",
-                    margin_bottom="2",
-                    font_family=ICEBERG_FONT
-                ),
-                rx.image(
-                    src=ContactState.qrcode_image_path,
-                    alt="Resume QR Code",
-                    width="100%",
-                    max_width="250px",
-                    max_height="250px", 
-                    border_radius="lg",
-                    box_shadow="lg",
-                    margin_bottom="4",
-                ),
+    """Component to display the QR code using static path."""
+    qrcode_path = get_qrcode_image_path()
+    
+    if not qrcode_path:
+        return rx.box()
+
+    return rx.center(
+        rx.vstack(
+            rx.text(
+                "Download Me",
+                size={'base': '6', 'md': '7'}, 
+                weight="bold", 
+                color=rx.color_mode_cond("black", "white"),
+                text_align="center",
+                margin_bottom="2",
+                font_family=ICEBERG_FONT
+            ),
+            rx.image(
+                src=qrcode_path, # Static path here
+                alt="Resume QR Code",
                 width="100%",
                 max_width="250px",
-                align_items="center",
-                padding_y="4",
-                border_top="1px solid var(--gray-5)",
+                max_height="250px", 
+                border_radius="lg",
+                box_shadow="lg",
+                margin_bottom="4",
             ),
             width="100%",
-            justify_content="center", 
-            padding_x={"base": "0", "md": "6"},
-        )
+            max_width="250px",
+            align_items="center",
+            padding_y="4",
+            border_top="1px solid var(--gray-5)",
+        ),
+        width="100%",
+        justify_content="center", 
+        padding_x={"base": "0", "md": "6"},
     )
 
 def profile_image_component() -> rx.Component:
-    """The core image/GIF component."""
+    """The core image/GIF component using static path."""
+    profile_path = get_profile_image_path()
+    
+    if not profile_path:
+        return rx.box()
+        
     return rx.image(
-        src=ContactState.profile_image_path,
+        src=profile_path, # Static path here
         alt="Profile Image/GIF",
         width="100%", 
         max_width="100%", 
@@ -181,11 +194,9 @@ def desktop_contact_me_layout() -> rx.Component:
     """
     Desktop (lg) and above layout: 3fr (Details) | 7fr (Image) Grid.
     """
+    # Components passed directly from the STATIC_CONTACT_LINKS list.
     contact_details_section = rx.vstack(
-        rx.foreach(
-            ContactState.contact_info.links,
-            contact_link_item
-        ),
+        *STATIC_CONTACT_LINKS, # Unpack the generated components
         qrcode_section(),
         align_items="flex-start",
         width="100%",
@@ -239,10 +250,7 @@ def mobile_contact_me_layout() -> rx.Component:
         rx.vstack(
             
             # All Links
-            rx.foreach(
-                ContactState.contact_info.links,
-                contact_link_item
-            ),
+            *STATIC_CONTACT_LINKS, # Unpack the generated components
             
             # QR Code Section (Centered and full width)
             qrcode_section(),
@@ -277,21 +285,20 @@ def contact_me(*args, **kwargs) -> rx.Component:
             width={"base": "95%", "md": "90%", "lg": "100%"}, 
             max_width=MAX_CONTENT_WIDTH, 
             
-            # FIX 2: Increased top padding for better gap below the navbar
-            padding_top="50px", # Increased gap below the navbar
+            # Increased top padding for better gap below the navbar
+            padding_top="50px", 
             padding_bottom="10",
             
             # Reduced horizontal padding on the wrapper for mobile 
-            # as individual items handle their padding now.
             padding_x={"base": "0", "md": "5"}, 
             
             # This ensures the vstack content is centered horizontally
             align_items="center", 
         ),
-        # FIX 1: Ensure the outer center component pushes the content to the true center
+        # Ensure the outer center component pushes the content to the true center
         width="100%",
         justify="center",
-        align_items="flex-start", # Ensure content starts high up
+        align_items="flex-start", 
     )
 
 

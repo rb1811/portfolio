@@ -39,10 +39,7 @@ def load_projects_data() -> typing.List[ProjectData]:
     Maps 'languages_used' to 'tech_stack' for display.
     """
     
-    # NOTE: In a Reflex app, assets should be placed in the project root's 'assets' folder
-    # and Reflex handles compilation/access. Use the direct path for Python loading.
     file_path = os.path.join(os.getcwd(), "assets", "projects_data.json")
-    
     projects_dicts: typing.List[dict] = []
     
     # 1. Try to load JSON data
@@ -52,10 +49,14 @@ def load_projects_data() -> typing.List[ProjectData]:
                 projects_dicts = json.load(f)
             print(f"Successfully loaded {len(projects_dicts)} raw project items.")
         else:
-            print(f"Error: Project data file not found at: {file_path}")
+            # Fallback path check
+            file_path = os.path.join("assets", "projects_data.json")
+            with open(file_path, 'r') as f:
+                projects_dicts = json.load(f)
+            print(f"Successfully loaded {len(projects_dicts)} raw project items from fallback path.")
             
-    except json.JSONDecodeError as e:
-        print(f"Error decoding project data JSON: {e}")
+    except (json.JSONDecodeError, FileNotFoundError) as e:
+        print(f"Error loading project data: {e}")
         return []
     except Exception as e:
         print(f"General error loading project data: {e}") 
@@ -63,14 +64,14 @@ def load_projects_data() -> typing.List[ProjectData]:
 
     # 2. Process and validate projects
     processed_projects: typing.List[ProjectData] = []
-    
     for project_dict in projects_dicts:
         try:
+            # Pydantic validation and object creation
             project = ProjectData(**project_dict)
+            # Map languages_used to tech_stack for display consistency
             project.tech_stack = project.languages_used
             processed_projects.append(project)
         except Exception as e:
-            # Added robust error handling for individual item validation failures
             print(f"Validation Error for item: {project_dict.get('title', 'Unknown Project')}. Error: {e}")
 
     print(f"Successfully processed {len(processed_projects)} valid project items.")
@@ -80,95 +81,84 @@ def load_projects_data() -> typing.List[ProjectData]:
 # Load data into a constant list
 PROJECTS_DATA_LIST: typing.List[ProjectData] = load_projects_data()
 
-# --- STATE MANAGEMENT ---
-class ProjectState(rx.State):
-    """State to manage and iterate over project data."""
-    projects_data: typing.List[ProjectData] = PROJECTS_DATA_LIST
-
 
 # --- HELPER COMPONENTS: PROJECT DIALOG ---
 
-def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
+# Since the ProjectData object is static, we must process it inside the function.
+# The type hint is now a concrete Python object, not an rx.Var.
+def project_dialog(project: ProjectData) -> rx.Component:
     """A dialog component to show full project details."""
     
-    # Define common padding for content indentation inside the dialog
     dialog_padding_x = "4"
     
-    # Create a component to render the full description as an unordered list
-    full_description_list = rx.unordered_list(
-        rx.foreach(
-            project.full_description,
-            lambda item: rx.list.item(
-                rx.text(
-                    item,
-                    size="3", # Increased font size for better readability
-                    color=rx.color_mode_cond("gray.700", "gray.300"),
-                    word_break="break-word", # FIX 2: Ensure long words/strings break
-                ),
-                margin_bottom="10px",
+    # Create a list of description items statically
+    full_description_list_items = [
+        rx.list.item(
+            rx.text(
+                item,
+                size="3", 
+                color=rx.color_mode_cond("gray.700", "gray.300"),
+                word_break="break-word", 
             ),
-        ),
+            margin_bottom="10px",
+        )
+        for item in project.full_description
+    ]
+    
+    # Render the static list comprehension results
+    full_description_list = rx.unordered_list(
+        *full_description_list_items,
         margin_top="20px",
         padding_x=dialog_padding_x,
         margin_bottom="10px",
     )
     
-    # Conditional image display component
+    # Conditional image display component (using static path/check)
     project_image = rx.cond(
-        project.image, # If the image field is not None/empty
+        project.image, 
         rx.center(
             rx.image(
-                # Fixed the previous error by directly binding the image path string.
-                src=project.image.to(str),
-                # Styling for full width and mid-height (max 300px)
+                src=f"/{project.image}",
                 width="100%", 
                 max_height="300px",
-                object_fit="contain", # Ensures the image fits without cropping
+                object_fit="contain",
                 border_radius="xl",
                 box_shadow="lg",
-                margin_y="6", # Add spacing above and below the image
-                alt=project.title, # Added alt text for accessibility
+                margin_y="6",
+                alt=project.title,
             ),
             width="100%",
             padding_x=dialog_padding_x,
             padding_y="10px",
-        )
+        ),
+        rx.box()
     )
     
-    # NEW: Determine the display name for the extra link
-    extra_link_name = rx.cond(
-        project.extra_href_display_name,
-        project.extra_href_display_name.to(str) + ": ",
-        rx.text("Research Paper: ", weight="bold", white_space="nowrap") # Default fallback text
-    )
-
-    # NEW: Research Paper Link Section uses the dynamic name
+    # Research Paper Link Section (using static check)
     research_paper_link_section = rx.cond(
         project.extra_href, 
         rx.hstack(
             rx.text(
-                rx.cond(
-                    project.extra_href_display_name,
-                    project.extra_href_display_name + ": ",
-                    "Research Paper: "
-                ),
+                # Use Python ternary operator logic here for static name
+                f"{project.extra_href_display_name or 'Research Paper'}: ",
                 weight="bold", 
                 white_space="nowrap"
             ),
             rx.link(
                 "Link", 
-                href=project.extra_href.to(str), 
+                href=project.extra_href, 
                 is_external=True,
                 color_scheme=project.color, 
                 text_decoration="underline",
-                _hover={"color": project.color + ".8"},
+                _hover={"color": f"var(--{project.color}-8)"},
                 on_click=rx.stop_propagation
             ),
             align_items="center",
             padding_x=dialog_padding_x,
             margin_y="3",
             margin_bottom="30px" 
-        )
+        ),
+        rx.box()
     )
     
     
@@ -188,13 +178,10 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
             )
         ),
         rx.dialog.content(
-            # --- Fixed padding placement ---
             rx.dialog.title(project.title, size="5"),
             
-            # Divider after title - Increased margin_y for more space below title
             rx.divider(margin_y="8"),
             
-            # Consolidated content section for uniform padding/spacing
             rx.vstack(
                 # Full Description 
                 rx.box(
@@ -202,7 +189,6 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                     width="100%",
                     text_align="left", 
                     padding="0", 
-                    # FIX 2: Added overflow wrap to the container to assist with text breaking
                     overflow_wrap="break-word", 
                 ),
                 
@@ -211,13 +197,13 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                     rx.text("Source Code: ", weight="bold", white_space="nowrap"),
                     rx.link(
                         project.href,
-                        href=project.href.to(str),
+                        href=project.href, # Use static href directly
                         is_external=True,
                         color_scheme=project.color,
                         text_decoration="underline",
-                        _hover={"color": project.color + ".8"},
+                        _hover={"color": f"var(--{project.color}-8)"},
                         on_click=rx.stop_propagation,
-                        word_break="break-all" # FIX 2: Break long URLs
+                        word_break="break-all"
                     ),
                     align_items="center",
                     padding_x=dialog_padding_x,
@@ -235,10 +221,8 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 padding_y="5",
             ),
 
-            # Divider before footer
             rx.divider(margin_y="5"),
             
-            # Close button at bottom left
             rx.flex(
                 rx.dialog.close(
                     rx.button("Close", variant="soft", color_scheme="gray"),
@@ -249,17 +233,16 @@ def project_dialog(project: rx.Var[ProjectData]) -> rx.Component:
                 padding_x=dialog_padding_x, 
             ),
             
-            # Keyword argument placement
             padding="24px", 
         ),
-        # FIX 1: Increased max_width to make dialog bigger 
         max_width={"base": "95vw", "sm": "95vw", "md": "700px"} 
     )
 
 
 # --- HELPER COMPONENTS: PROJECT CARD ---
 
-def project_card(project: rx.Var[ProjectData]) -> rx.Component:
+# The type hint is now a concrete Python object, not an rx.Var.
+def project_card(project: ProjectData) -> rx.Component:
     """
     A card displaying a single project.
     """
@@ -268,11 +251,8 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     
     # Team size badge (Placed below the title)
     teamsize_badge = rx.badge(
-        rx.cond(
-            teamsize_condition,
-            "Individual",
-            "Team of " + project.teamsize.to(str)
-        ),
+        # Use simple Python conditional logic
+        "Individual" if teamsize_condition else f"Team of {project.teamsize}",
         variant="soft", 
         color_scheme=project.color,
         size="2",
@@ -283,21 +263,24 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     )
 
     # 1. Tech stack display (Label + Badges) 
+    # Generate badges using a static list comprehension
+    tech_badges = [
+        rx.badge(
+            tech,
+            color_scheme=project.color,
+            variant="outline",
+            size="1",
+        )
+        for tech in project.tech_stack
+    ]
+    
+    # Render the tech stack content conditionally based on the Python list size
     tech_stack_content = rx.cond(
-        # Check if the list length is > 0
-        project.tech_stack.length() > 0,
+        len(project.tech_stack) > 0,
         rx.vstack(
             rx.text("Tech Stack:", size="2", weight="bold", color=rx.color_mode_cond("gray.600", "gray.400"), margin_bottom="1"),
             rx.hstack(
-                rx.foreach(
-                    project.tech_stack, 
-                    lambda tech: rx.badge(
-                        tech,
-                        color_scheme=project.color,
-                        variant="outline",
-                        size="1",
-                    ),
-                ),
+                *tech_badges, # Unpack the static badges
                 wrap="wrap",
                 spacing="2",
                 width="100%",
@@ -308,16 +291,13 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         )
     )
 
-
     # Title (now just text, no link)
     title_text = rx.text(
         project.title,
         size="6",
         weight="bold",
-        # Change title color based on color mode
         color=rx.color_mode_cond("gray.900", "white"), 
-        _hover={"color": project.color + ".8"},
-        # Apply negative margin to pull title further left for indentation effect
+        _hover={"color": f"var(--{project.color}-8)"},
         margin_left="-15px" 
     )
     
@@ -325,7 +305,6 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     short_description_text = rx.text(
         project.short_description,
         size="3",
-        # Change description color based on color mode
         color=rx.color_mode_cond("gray.600", "gray.400"), 
         margin_top="3", 
         text_align="left", 
@@ -334,29 +313,25 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
     
     # Source Code link
     source_code_link = rx.hstack(
-        # Change label color based on color mode
         rx.text("Source Code:", size="2", weight="bold", color=rx.color_mode_cond("gray.600", "gray.400")),
         rx.link(
             "Link", 
-            href=project.href.to(str),
+            href=project.href, # Static href
             is_external=True,
             color_scheme=project.color,
             text_decoration="underline",
-            _hover={"color": project.color + ".8"},
+            _hover={"color": f"var(--{project.color}-8)"},
             on_click=rx.stop_propagation
         ),
         align_items="center",
         align_self="flex-start", 
-        margin_top="4", # Vertical spacing
+        margin_top="4",
     )
     
-    # Calculate hover border color
-    hover_border_color = "1px solid var(--link-" + project.color + "-6)"
+    # Calculate hover border color statically
+    hover_border_color = f"1px solid var(--{project.color}-6)"
     
-    # Common horizontal padding for card content (increased for more padding/indentation)
     card_content_padding_x = "30px" 
-    
-    # Define a consistent bottom padding
     card_content_padding_bottom = "20px"
 
     return rx.vstack(
@@ -364,13 +339,13 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         rx.box(
             rx.vstack(
                 title_text,      
-                rx.divider(margin_y="0"), # Divider below title
+                rx.divider(margin_y="0"),
                 teamsize_badge,  
                 
                 # --- Main Content Block (gets flex_grow) ---
                 rx.vstack(
                     short_description_text,
-                    rx.box(flex_grow=1), # Pushes the tech stack/link down for short descriptions
+                    rx.box(flex_grow=1), 
                     tech_stack_content, 
                     source_code_link,
                     align_items="flex-start",
@@ -384,11 +359,11 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
             
             width="100%",
             padding_x=card_content_padding_x,
-            padding_top="20px", # Added top padding for consistency
+            padding_top="20px", 
             padding_bottom=card_content_padding_bottom, 
         ),
         
-        # --- SPACER: Takes up all remaining space in the card, pushing the footer down ---
+        # --- SPACER: Pushes the footer down ---
         rx.box(flex_grow=1), 
         
         # --- Divider: Placed right before the button ---
@@ -396,19 +371,18 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         
         # Dialog Trigger Section (The anchored footer button)
         rx.box(
-            project_dialog(project),
+            project_dialog(project), # Pass the static project object
             width="100%",
         ),
         
         # Card styling
         width="100%",
         height="100%",
-        flex_grow=1, # Allows the card to stretch to the height of its row
+        flex_grow=1, 
         align_items="flex-start", 
         border_radius="xl",
         padding="0", 
         
-        # Make card background, shadow, and border conditional based on color mode
         background=rx.color_mode_cond("white", "#1e1e1e"),
         box_shadow=rx.color_mode_cond("lg", "lg"), 
         border=rx.color_mode_cond("1px solid var(--gray-4)", "1px solid rgba(255, 255, 255, 0.1)"), 
@@ -420,33 +394,38 @@ def project_card(project: rx.Var[ProjectData]) -> rx.Component:
         }
     )
 
+# --- STATIC PROJECT CARD GENERATION ---
+# This list comprehension replaces the main rx.foreach loop.
+STATIC_PROJECTS_CARDS = [
+    rx.card(
+        project_card(project), # Pass the static project object
+        width="100%",
+        padding="0",
+    )
+    for project in PROJECTS_DATA_LIST
+]
+
+
 # --- MAIN PAGE COMPONENT (CHILD) ---
 
 def projects(*args, **kwargs) -> rx.Component:
     """
-    Displays project cards in a responsive grid layout.
+    Displays project cards in a responsive grid layout using static components.
     """
     return rx.center(
         rx.vstack(
             rx.grid(
-                rx.foreach(
-                    ProjectState.projects_data,
-                    lambda project: rx.card(
-                        project_card(project),
-                        width="100%",
-                        padding="0",
-                    ),
-                ), 
+                *STATIC_PROJECTS_CARDS, # Unpack the static components
                 
                 # Responsive columns: 1 column on mobile, 2 on tablet, 3 on desktop
                 columns={"base": "1", "md": "2", "lg": "3"},
                 spacing="5",
                 width="100%", 
-                align_items="stretch", # Ensures all cards in a row match the height of the tallest card
+                align_items="stretch", 
             ),
             width="90%",
             max_width="100%",
-            padding_top="10px", # Adding padding to match the Contact page and create gap from navbar
+            padding_top="10px", 
             padding_bottom="40px",
         ),
         width="100%",
