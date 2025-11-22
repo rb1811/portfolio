@@ -176,7 +176,7 @@ def navbar_icons() -> rx.Component:
                     ),
                     
                     # 3. Color Mode Button
-                    rx.color_mode.button(), 
+                    # rx.color_mode.button(), 
                     
                     spacing="3", # Spacing between Name, Printer, and Mode Button
                     align_items="center",

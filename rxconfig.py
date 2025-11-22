@@ -7,12 +7,5 @@ config = rx.Config(
         rx.plugins.SitemapPlugin(),
         rx.plugins.TailwindV4Plugin(),
     ],
-    watermark=False,
-    tailwind_config={
-        'theme': {
-            'extend': {},
-        },
-        'plugins': ['@tailwindcss/typography'],
-    },
-    suppress_build_web_path_warning=True,
+    show_built_with_reflex=False
 )
