@@ -1,1 +1,0 @@
-import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-DOa9LVdE.js";var t=[[`path`,{d:`m7 20 5-5 5 5`,key:`13a0gw`}],[`path`,{d:`m7 4 5 5 5-5`,key:`1kwcof`}]],n=e(`chevrons-down-up`,t);export{t as __iconNode,n as default};

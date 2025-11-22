@@ -1,1 +1,0 @@
-import"./react-mzm7_iSr.js";import{t as e}from"./createLucideIcon-DOa9LVdE.js";var t=[[`path`,{d:`M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z`,key:`17jzev`}]],n=e(`thermometer`,t);export{t as __iconNode,n as default};
