@@ -133,7 +133,7 @@ def navbar_icons() -> rx.Component:
                 ),
                 
                 # Color Mode Button
-                rx.color_mode.button(), 
+                # rx.color_mode.button(), 
                 
                 # 2. Navigation Links Group (Centered)
                 rx.hstack(
