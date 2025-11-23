@@ -1,5 +1,4 @@
 .states
-.web
 assets/external/
 *.py[cod]
 # Operating System Files
@@ -12,6 +11,7 @@ Thumbs.db
 .local/
 .states/
 .bun/
+.bash_history
 
 # Python Artifacts
 __pycache__/
@@ -40,5 +40,3 @@ reflex.db
 
 # .NET artifacts
 .dotnet/
-
-.bash_history
