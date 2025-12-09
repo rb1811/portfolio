@@ -22,10 +22,11 @@ class ContactData(BaseModel):
     resume: str
     qrcode: str 
     links: typing.List[ContactLink]
-    name: str = "Prabhat Racherla"
+    phone_number: str = ""
+    vcf_image: str = Field(default="", alias="vcf-image") 
+    full_name: str = Field(default="Prabhat Racherla", alias="full_name")
+    download_vcf: str = Field(default="", alias="download_vcf")
 
-
-# --- DATA LOADING (Global Constant) ---
 
 def load_contact_data() -> ContactData:
     """Loads contact data from 'assets/contact_me.json'."""

@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Reflex Development Server (Frontend)",
+            "type": "shell",
+            "command": "reflex run",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "instanceLimit": 1 // Prevents multiple instances of 'reflex run'
+            },
+            "problemMatcher": []
+        }
+    ]
+}

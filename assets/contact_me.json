@@ -2,6 +2,10 @@
   "profile_pic": "goku.gif",
   "resume": "prabhat_racherla_resume.pdf",
   "qrcode": "qr_code_resume.png",
+  "phone_number": "+91 7880097630",
+  "vcf-image": "vcf-back.jpg",
+  "full_name": "Prabhat Racherla",
+  "download_vcf": "prabhat_racherla.vcf",
   "links": [
     {
       "name": "Email",
