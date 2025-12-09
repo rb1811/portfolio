@@ -1,20 +1,20 @@
 import reflex as rx
 from typing import Optional
 
+# Assuming these imports are correct based on your project structure
 from .contact_me_page import CONTACT_DATA
-from ..navbar import get_resume_path
+from ..navbar import get_resume_path 
 
-
+# --- VCF Path Helper Function (Provides the correct root-relative path) ---
 def get_vcf_download_path() -> str:
     """Computes the correct path to the VCF file, matching the resume path logic."""
     if CONTACT_DATA.download_vcf:
-        # This matches the working logic: prefix with / and ensure no double slash
+        # Returns the root path (e.g., /prabhat_racherla.vcf)
         return f"/{CONTACT_DATA.download_vcf.lstrip('/')}"
     return ""
 
 # --- Helper Component (remains the same) ---
 def evcard_contact_item(icon_name: str, value: str, href: Optional[str] = None) -> rx.Component:
-    # ... (content of this function remains the same)
     
     text_color = "white"
     
@@ -56,15 +56,15 @@ def evcard_contact_item(icon_name: str, value: str, href: Optional[str] = None) 
         return content
 
 def evcard_page(*args, **kwargs) -> rx.Component:
-    """Creates the final e-vCard page with the VCF download button."""
+    """Creates the final e-vCard page with the VCF download button, including all fixes."""
 
     # Extract required data
     full_name = CONTACT_DATA.full_name
     phone_number = CONTACT_DATA.phone_number
     vcf_image_filename = CONTACT_DATA.vcf_image
-    # NEW: VCF Download filename
-    # vcf_download_filename = CONTACT_DATA.download_vcf 
-    # vcf_download_path = f"/{CONTACT_DATA.download_vcf}"
+    
+    # Get the working VCF path
+    vcf_download_path = get_vcf_download_path()
 
     def find_link(name):
         return next((link for link in CONTACT_DATA.links if link.name == name), None)
@@ -105,15 +105,18 @@ def evcard_page(*args, **kwargs) -> rx.Component:
                     color_scheme="teal", # Use a vibrant color for the action
                     width="100%",
                 ),
-                # Href points to the static file in the assets folder
-                href=get_vcf_download_path(),
-                is_external=True,
+                # Href points to the static file
+                href=vcf_download_path,
+                
+                # FIX: Forces browser to handle the link, bypassing the router
+                is_external=True, 
+                
                 download=True, # Tells the browser to download the file instead of navigating
                 width="100%",
             ),
-            width="40%", # FIX 2: Reduced the width of the button container
+            width="40%", # Reduced the width of the button container
             max_width="250px", # Added max width for control
-            padding_top="50px", # FIX 1: Increased top padding to push button down
+            padding_top="50px", # Increased top padding to push button down
             padding_bottom="3", # Slight bottom padding for balance
         ),
 
@@ -128,7 +131,7 @@ def evcard_page(*args, **kwargs) -> rx.Component:
         width="100%",
         height="100%",
         style={
-            # Background opacity from previous fix (0.3)
+            # Background opacity 
             "backgroundColor": "rgba(0, 0, 0, 0.3)", 
             "padding": "20px", 
             "zIndex": 2, 
@@ -158,14 +161,20 @@ def evcard_page(*args, **kwargs) -> rx.Component:
         }
     )
 
-    # --- The Main Card Container (remains the same) ---
+    # --- The Main Card Container ---
     evcard = rx.box(
         background_image_box,     # Layer 1
         content_overlay_box,      # Layer 2
         
         width="100%", 
         max_width="450px", 
-        min_height="550px",
+        min_height="550px", # Keep min_height for desktop spacing consistency
+
+        # FIX: Responsive padding on the card itself to control mobile margins
+        padding={
+            "initial": "0 20px", # 0px top/bottom, 20px left/right for mobile spacing
+            "md": "0",           # Remove padding on medium/desktop screens
+        },
         
         style={
             "position": "relative", 
@@ -180,6 +189,13 @@ def evcard_page(*args, **kwargs) -> rx.Component:
         evcard,
         width="100%",
         min_height="100vh",
-        padding_y="50px",
         background_color="#181818",
+        
+        # FIX: Ensure no vertical scrolling by hiding overflow and using flexbox for centering
+        style={
+            "overflowY": "hidden", 
+            "display": "flex", 
+            "alignItems": "center", 
+            "justifyContent": "center", 
+        }
     )
