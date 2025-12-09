@@ -1,0 +1,8 @@
+import{r as e}from"./rolldown-runtime-Bx2BaRVb.js";import{j as t}from"./chunk-UIGDSWPH-DqvTC0z0.js";
+/**
+* @license lucide-react v0.552.0 - ISC
+*
+* This source code is licensed under the ISC license.
+* See the LICENSE file in the root directory of this source tree.
+*/
+var n=e=>e.replace(/([a-z0-9])([A-Z])/g,`$1-$2`).toLowerCase(),r=e=>e.replace(/^([A-Z])|[\s-_]+(\w)/g,(e,t,n)=>n?n.toUpperCase():t.toLowerCase()),i=e=>{let t=r(e);return t.charAt(0).toUpperCase()+t.slice(1)},a=(...e)=>e.filter((e,t,n)=>!!e&&e.trim()!==``&&n.indexOf(e)===t).join(` `).trim(),o=e=>{for(let t in e)if(t.startsWith(`aria-`)||t===`role`||t===`title`)return!0},s={xmlns:`http://www.w3.org/2000/svg`,width:24,height:24,viewBox:`0 0 24 24`,fill:`none`,stroke:`currentColor`,strokeWidth:2,strokeLinecap:`round`,strokeLinejoin:`round`},c=e(t()),l=(0,c.forwardRef)(({color:e=`currentColor`,size:t=24,strokeWidth:n=2,absoluteStrokeWidth:r,className:i=``,children:l,iconNode:u,...d},f)=>(0,c.createElement)(`svg`,{ref:f,...s,width:t,height:t,stroke:e,strokeWidth:r?Number(n)*24/Number(t):n,className:a(`lucide`,i),...!l&&!o(d)&&{"aria-hidden":`true`},...d},[...u.map(([e,t])=>(0,c.createElement)(e,t)),...Array.isArray(l)?l:[l]])),u=(e,t)=>{let r=(0,c.forwardRef)(({className:r,...o},s)=>(0,c.createElement)(l,{ref:s,iconNode:t,className:a(`lucide-${n(i(e))}`,`lucide-${e}`,r),...o}));return r.displayName=i(e),r},d=u(`globe`,[[`circle`,{cx:`12`,cy:`12`,r:`10`,key:`1mglay`}],[`path`,{d:`M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20`,key:`13o1zl`}],[`path`,{d:`M2 12h20`,key:`9i4pu4`}]]),f=u(`mail`,[[`path`,{d:`m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7`,key:`132q7q`}],[`rect`,{x:`2`,y:`4`,width:`20`,height:`16`,rx:`2`,key:`izxlao`}]]);export{d as n,u as r,f as t};
