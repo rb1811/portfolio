@@ -10,6 +10,7 @@ Thumbs.db
 .config/
 .local/
 .states/
+.ssh/
 .bun/
 .bash_history
 

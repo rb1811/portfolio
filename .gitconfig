@@ -1,4 +1,4 @@
 [user]
 	email = Prabhat Racherla
 [credential]
-	helper = "!f() { /app/.vscode-server/bin/bf9252a2fb45be6893dd8870c0bf37e2e1766d61/node /tmp/vscode-remote-containers-b0cb98fa-8535-4f3d-b29b-77d6a46d1f6b.js git-credential-helper $*; }; f"
+	helper = "!f() { /app/.vscode-server/bin/bf9252a2fb45be6893dd8870c0bf37e2e1766d61/node /tmp/vscode-remote-containers-ab781354-2d04-4ef7-864f-5013f8a1e90a.js git-credential-helper $*; }; f"
